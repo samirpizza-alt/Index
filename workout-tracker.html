@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Workout Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 20px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .tab {
+            background: #1c1c1e;
+            border: none;
+            color: #8e8e93;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            background: #0a84ff;
+            color: #fff;
+        }
+        
+        .workout-select {
+            margin-bottom: 20px;
+        }
+        
+        .workout-btn {
+            width: 100%;
+            background: #1c1c1e;
+            border: 2px solid #2c2c2e;
+            color: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .workout-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .workout-btn.selected {
+            background: #0a84ff;
+            border-color: #0a84ff;
+        }
+        
+        .exercise-list {
+            margin-top: 20px;
+        }
+        
+        .exercise-card {
+            background: #1c1c1e;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .exercise-name {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .exercise-target {
+            font-size: 13px;
+            color: #8e8e93;
+        }
+        
+        .sets-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .set-row {
+            display: grid;
+            grid-template-columns: 40px 1fr 1fr 40px;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .set-label {
+            font-size: 15px;
+            color: #8e8e93;
+            font-weight: 600;
+        }
+        
+        .set-input {
+            background: #2c2c2e;
+            border: none;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 15px;
+            text-align: center;
+        }
+        
+        .set-input:focus {
+            outline: 2px solid #0a84ff;
+        }
+        
+        .check-btn {
+            width: 32px;
+            height: 32px;
+            background: #2c2c2e;
+            border: 2px solid #3a3a3c;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .check-btn.checked {
+            background: #34c759;
+            border-color: #34c759;
+        }
+        
+        .check-btn.checked::after {
+            content: '✓';
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .workout-controls {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .control-btn {
+            flex: 1;
+            background: #0a84ff;
+            border: none;
+            color: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .control-btn.danger {
+            background: #ff3b30;
+        }
+        
+        .control-btn.secondary {
+            background: #2c2c2e;
+        }
+        
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .history-card {
+            background: #1c1c1e;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #2c2c2e;
+        }
+        
+        .history-workout {
+            font-size: 19px;
+            font-weight: 600;
+        }
+        
+        .history-date {
+            font-size: 13px;
+            color: #8e8e93;
+        }
+        
+        .history-exercises {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .history-exercise {
+            font-size: 15px;
+            color: #8e8e93;
+        }
+        
+        .history-exercise span {
+            color: #fff;
+            font-weight: 500;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8e8e93;
+        }
+        
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .workout-detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+            display: none;
+        }
+        
+        .workout-detail-modal.active {
+            display: block;
+        }
+        
+        .workout-detail-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .workout-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close-detail-btn {
+            background: #2c2c2e;
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .detail-workout-title {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .detail-date {
+            color: #8e8e93;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-exercise-card {
+            background: #1c1c1e;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .detail-exercise-name {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .detail-set-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #2c2c2e;
+            font-size: 15px;
+        }
+        
+        .detail-set-info:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-set-label {
+            color: #8e8e93;
+        }
+        
+        .detail-set-values {
+            color: #fff;
+            font-weight: 500;
+        }
+        
+        .history-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .history-card:active {
+            transform: scale(0.98);
+        }
+        
+        .history-card-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .history-card-content {
+            position: relative;
+            z-index: 2;
+            background: #1c1c1e;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+            touch-action: pan-y;
+        }
+        
+        .history-card-delete-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 80px;
+            background: #ff3b30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            z-index: 1;
+        }
+        
+        .history-card-delete-btn {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Workout Tracker</h1>
+    </div>
+    
+    <div class="tabs">
+        <button class="tab active" data-tab="workout">Workouts</button>
+        <button class="tab" data-tab="history">History</button>
+    </div>
+    
+    <div id="workout-tab" class="tab-content">
+        <div id="workout-select" class="workout-select">
+            <button class="workout-btn" data-workout="upper">Upper</button>
+            <button class="workout-btn" data-workout="lower">Lower</button>
+            <button class="workout-btn" data-workout="push">Push</button>
+            <button class="workout-btn" data-workout="pull">Pull</button>
+            <button class="workout-btn" data-workout="legs">Legs</button>
+        </div>
+        
+        <div id="active-workout" style="display: none;">
+            <div class="workout-controls">
+                <button class="control-btn" onclick="finishWorkout()">Finish Workout</button>
+                <button class="control-btn secondary" onclick="cancelWorkout()">Cancel</button>
+            </div>
+            <div id="exercise-list" class="exercise-list"></div>
+        </div>
+    </div>
+    
+    <div id="history-tab" class="tab-content" style="display: none;">
+        <div id="history-list" class="history-list"></div>
+    </div>
+    
+    <div id="workout-detail-modal" class="workout-detail-modal">
+        <div class="workout-detail-content">
+            <div class="workout-detail-header">
+                <div>
+                    <div class="detail-workout-title" id="detail-title"></div>
+                    <div class="detail-date" id="detail-date"></div>
+                </div>
+                <button class="close-detail-btn" id="close-detail">✕</button>
+            </div>
+            <div id="detail-exercises"></div>
+        </div>
+    </div>
+
+    <script>
+        const workouts = {
+            upper: {
+                name: 'Upper',
+                exercises: [
+                    { name: 'Incline dumbbell press', sets: 3, reps: '10' },
+                    { name: 'Pullup/deadlift', sets: 3, reps: '15' },
+                    { name: 'Overhead Tricep Extensions', sets: 3, reps: '10' },
+                    { name: 'Preacher hammer curls', sets: 3, reps: '10' },
+                    { name: 'Crunch machine', sets: 3, reps: '10' }
+                ]
+            },
+            lower: {
+                name: 'Lower',
+                exercises: [
+                    { name: 'Squat', sets: 3, reps: '10' },
+                    { name: 'Hip thrust', sets: 3, reps: '10' },
+                    { name: 'Leg extensions', sets: 3, reps: '15' },
+                    { name: 'Calf raises', sets: 4, reps: '15' },
+                    { name: 'Dragonfly variation', sets: 3, reps: '15' }
+                ]
+            },
+            push: {
+                name: 'Push',
+                exercises: [
+                    { name: 'Bench press', sets: 3, reps: '8-10' },
+                    { name: 'Shoulder press', sets: 3, reps: '10-15' },
+                    { name: 'Pec dec', sets: 3, reps: '15-20' },
+                    { name: 'Cable lateral raise', sets: 3, reps: '10-15' },
+                    { name: 'Tricep overhead extension', sets: 3, reps: '5-10' },
+                    { name: 'Cable kickback', sets: 3, reps: '10-15' }
+                ]
+            },
+            pull: {
+                name: 'Pull',
+                exercises: [
+                    { name: 'Close grip lat pulldown', sets: 3, reps: '10-15' },
+                    { name: 'Chest supported machine row', sets: 3, reps: '10-15' },
+                    { name: 'Close Grip Cable Row', sets: 2, reps: '15-20' },
+                    { name: 'Reverse cable flies', sets: 3, reps: '15-20' },
+                    { name: 'Shrugs', sets: 4, reps: '15' }
+                ]
+            },
+            legs: {
+                name: 'Legs',
+                exercises: [
+                    { name: 'Seated leg curl', sets: 3, reps: '10-15' },
+                    { name: 'Smith/regular squat', sets: 3, reps: '5-10' },
+                    { name: 'Romanian deadlift', sets: 3, reps: '5-10' },
+                    { name: 'Leg extensions', sets: 3, reps: '5-10' },
+                    { name: 'Hip adduction', sets: 2, reps: '15-20' },
+                    { name: 'Hip abduction', sets: 2, reps: '15-20' },
+                    { name: 'Standing calf raises', sets: 4, reps: '10-15' }
+                ]
+            }
+        };
+
+        let currentWorkout = null;
+        let workoutData = {};
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const tabName = tab.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.style.display = 'none';
+                });
+                document.getElementById(`${tabName}-tab`).style.display = 'block';
+                
+                if (tabName === 'history') {
+                    loadHistory();
+                }
+            });
+        });
+
+        // Workout selection
+        document.querySelectorAll('.workout-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const workoutKey = btn.dataset.workout;
+                startWorkout(workoutKey);
+            });
+        });
+
+        function startWorkout(workoutKey) {
+            currentWorkout = workoutKey;
+            workoutData = {};
+            
+            document.getElementById('workout-select').style.display = 'none';
+            document.getElementById('active-workout').style.display = 'block';
+            
+            renderExercises();
+        }
+
+        function renderExercises() {
+            const workout = workouts[currentWorkout];
+            const container = document.getElementById('exercise-list');
+            container.innerHTML = '';
+            
+            workout.exercises.forEach((exercise, exerciseIndex) => {
+                const card = document.createElement('div');
+                card.className = 'exercise-card';
+                
+                const header = document.createElement('div');
+                header.className = 'exercise-header';
+                header.innerHTML = `
+                    <div>
+                        <div class="exercise-name">${exercise.name}</div>
+                        <div class="exercise-target">${exercise.sets} × ${exercise.reps}</div>
+                    </div>
+                `;
+                card.appendChild(header);
+                
+                const setsContainer = document.createElement('div');
+                setsContainer.className = 'sets-container';
+                
+                for (let i = 0; i < exercise.sets; i++) {
+                    const setRow = document.createElement('div');
+                    setRow.className = 'set-row';
+                    
+                    // Create reps dropdown (1-25)
+                    let repsOptions = '<option value="">Reps</option>';
+                    for (let r = 1; r <= 25; r++) {
+                        repsOptions += `<option value="${r}">${r}</option>`;
+                    }
+                    
+                    // Create weight dropdown (30-200 in increments of 10)
+                    let weightOptions = '<option value="">Weight</option>';
+                    for (let w = 30; w <= 200; w += 10) {
+                        weightOptions += `<option value="${w}">${w}</option>`;
+                    }
+                    
+                    setRow.innerHTML = `
+                        <div class="set-label">${i + 1}</div>
+                        <select class="set-input" data-exercise="${exerciseIndex}" data-set="${i}" data-type="reps">${repsOptions}</select>
+                        <select class="set-input" data-exercise="${exerciseIndex}" data-set="${i}" data-type="weight">${weightOptions}</select>
+                        <div class="check-btn" data-exercise="${exerciseIndex}" data-set="${i}"></div>
+                    `;
+                    
+                    setsContainer.appendChild(setRow);
+                }
+                
+                card.appendChild(setsContainer);
+                container.appendChild(card);
+            });
+            
+            // Add event listeners
+            document.querySelectorAll('.set-input').forEach(input => {
+                input.addEventListener('change', handleSetInput);
+            });
+            
+            document.querySelectorAll('.check-btn').forEach(btn => {
+                btn.addEventListener('click', handleSetCheck);
+            });
+        }
+
+        function handleSetInput(e) {
+            const exerciseIndex = e.target.dataset.exercise;
+            const setIndex = e.target.dataset.set;
+            const type = e.target.dataset.type;
+            const value = e.target.value;
+            
+            if (!workoutData[exerciseIndex]) {
+                workoutData[exerciseIndex] = {};
+            }
+            if (!workoutData[exerciseIndex][setIndex]) {
+                workoutData[exerciseIndex][setIndex] = {};
+            }
+            
+            workoutData[exerciseIndex][setIndex][type] = value;
+        }
+
+        function handleSetCheck(e) {
+            e.target.classList.toggle('checked');
+        }
+
+        function finishWorkout() {
+            const workout = workouts[currentWorkout];
+            
+            // Save to history
+            const history = JSON.parse(localStorage.getItem('workoutHistory') || '[]');
+            history.unshift({
+                workout: workout.name,
+                date: new Date().toISOString(),
+                data: workoutData,
+                exercises: workout.exercises
+            });
+            localStorage.setItem('workoutHistory', JSON.stringify(history));
+            
+            resetWorkout();
+            alert('Workout saved! 💪');
+        }
+
+        function cancelWorkout() {
+            resetWorkout();
+        }
+        
+        // Make functions globally accessible for onclick
+        window.cancelWorkout = cancelWorkout;
+        window.finishWorkout = finishWorkout;
+
+        function resetWorkout() {
+            document.getElementById('workout-select').style.display = 'block';
+            document.getElementById('active-workout').style.display = 'none';
+            currentWorkout = null;
+            workoutData = {};
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('workoutHistory') || '[]');
+            const container = document.getElementById('history-list');
+            
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <div>No workout history yet.<br>Complete your first workout to see it here!</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            history.forEach((entry, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'history-card-wrapper';
+                
+                const date = new Date(entry.date);
+                
+                wrapper.innerHTML = `
+                    <div class="history-card-delete-bg">
+                        <div class="history-card-delete-btn">🗑️</div>
+                    </div>
+                    <div class="history-card-content" data-index="${index}">
+                        <div class="history-card">
+                            <div class="history-header">
+                                <div>
+                                    <div class="history-workout">${entry.workout}</div>
+                                    <div class="history-date">${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                const cardContent = wrapper.querySelector('.history-card-content');
+                const deleteBtn = wrapper.querySelector('.history-card-delete-btn');
+                
+                // Swipe functionality
+                let startX = 0;
+                let currentX = 0;
+                let isDragging = false;
+                
+                cardContent.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                    cardContent.style.transition = 'none';
+                });
+                
+                cardContent.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    currentX = e.touches[0].clientX;
+                    const diff = startX - currentX;
+                    
+                    if (diff > 0 && diff <= 80) {
+                        cardContent.style.transform = `translateX(-${diff}px)`;
+                    }
+                });
+                
+                cardContent.addEventListener('touchend', () => {
+                    isDragging = false;
+                    const diff = startX - currentX;
+                    cardContent.style.transition = 'transform 0.3s ease';
+                    
+                    if (diff > 40) {
+                        cardContent.style.transform = 'translateX(-80px)';
+                    } else {
+                        cardContent.style.transform = 'translateX(0)';
+                    }
+                });
+                
+                // Click to view details
+                cardContent.addEventListener('click', (e) => {
+                    const transform = cardContent.style.transform;
+                    if (transform && transform.includes('-80px')) {
+                        // If swiped, close swipe instead of opening detail
+                        cardContent.style.transform = 'translateX(0)';
+                    } else {
+                        showWorkoutDetail(entry);
+                    }
+                });
+                
+                // Delete button click
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteWorkout(index);
+                });
+                
+                container.appendChild(wrapper);
+            });
+        }
+        
+        function showWorkoutDetail(entry) {
+            const modal = document.getElementById('workout-detail-modal');
+            const date = new Date(entry.date);
+            
+            document.getElementById('detail-title').textContent = entry.workout;
+            document.getElementById('detail-date').textContent = 
+                `${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            
+            const exercisesContainer = document.getElementById('detail-exercises');
+            exercisesContainer.innerHTML = '';
+            
+            entry.exercises.forEach((exercise, exerciseIndex) => {
+                const exerciseCard = document.createElement('div');
+                exerciseCard.className = 'detail-exercise-card';
+                
+                const sets = entry.data[exerciseIndex] || {};
+                const setCount = Object.keys(sets).length;
+                
+                let setsHTML = '';
+                for (let i = 0; i < exercise.sets; i++) {
+                    const setData = sets[i];
+                    if (setData && (setData.reps || setData.weight)) {
+                        const reps = setData.reps || '-';
+                        const weight = setData.weight || '-';
+                        setsHTML += `
+                            <div class="detail-set-info">
+                                <div class="detail-set-label">Set ${i + 1}</div>
+                                <div class="detail-set-values">${reps} reps × ${weight} lbs</div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                if (setsHTML) {
+                    exerciseCard.innerHTML = `
+                        <div class="detail-exercise-name">${exercise.name}</div>
+                        ${setsHTML}
+                    `;
+                    exercisesContainer.appendChild(exerciseCard);
+                }
+            });
+            
+            modal.classList.add('active');
+        }
+        
+        document.getElementById('close-detail').addEventListener('click', () => {
+            document.getElementById('workout-detail-modal').classList.remove('active');
+        });
+        
+        function deleteWorkout(index) {
+            if (confirm('Delete this workout?')) {
+                const history = JSON.parse(localStorage.getItem('workoutHistory') || '[]');
+                history.splice(index, 1);
+                localStorage.setItem('workoutHistory', JSON.stringify(history));
+                loadHistory();
+            }
+        }
+    </script>
+</body>
+</html>
