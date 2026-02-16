@@ -95,12 +95,43 @@
             margin-bottom: 12px;
         }
         
+        .exercise-card.wiggle {
+            animation: wiggle 0.3s ease-in-out infinite;
+        }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-1deg); }
+            50% { transform: rotate(1deg); }
+        }
+        
         .exercise-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
         }
+        
+        .exercise-name-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .muscle-tag {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .muscle-tag.chest { background: #ff3b30; }
+        .muscle-tag.back { background: #34c759; }
+        .muscle-tag.legs { background: #5856d6; }
+        .muscle-tag.shoulders { background: #ff9500; }
+        .muscle-tag.arms { background: #ff9f0a; }
+        .muscle-tag.core { background: #30d158; }
         
         .exercise-name {
             font-size: 17px;
@@ -171,6 +202,30 @@
             height: 100%;
         }
         
+        .set-counter-btn {
+            width: 45px;
+            height: 40px;
+            background: #2c2c2e;
+            border: 2px solid #3a3a3c;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .set-counter-btn.active {
+            background: #34c759;
+            border-color: #34c759;
+        }
+        
+        .set-counter-text {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
         .workout-controls {
             display: flex;
             gap: 10px;
@@ -189,10 +244,6 @@
             cursor: pointer;
         }
         
-        .control-btn.danger {
-            background: #ff3b30;
-        }
-        
         .control-btn.secondary {
             background: #2c2c2e;
         }
@@ -201,6 +252,53 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+        }
+        
+        .history-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .history-card:active {
+            transform: scale(0.98);
+        }
+        
+        .history-card-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .history-card-content {
+            position: relative;
+            z-index: 2;
+            background: #1c1c1e;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+            touch-action: pan-y;
+        }
+        
+        .history-card-delete-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 80px;
+            background: #ff3b30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            z-index: 1;
+        }
+        
+        .history-card-delete-btn {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
         }
         
         .history-card {
@@ -226,22 +324,6 @@
         .history-date {
             font-size: 13px;
             color: #8e8e93;
-        }
-        
-        .history-exercises {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .history-exercise {
-            font-size: 15px;
-            color: #8e8e93;
-        }
-        
-        .history-exercise span {
-            color: #fff;
-            font-weight: 500;
         }
         
         .empty-state {
@@ -340,32 +422,143 @@
             font-weight: 500;
         }
         
-        .history-card {
-            cursor: pointer;
-            transition: transform 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .history-card:active {
-            transform: scale(0.98);
-        }
-        
-        .history-card-wrapper {
+        /* Library specific styles */
+        .library-exercise-wrapper {
             position: relative;
             margin-bottom: 12px;
         }
         
-        .history-card-content {
+        .library-exercise-content {
             position: relative;
             z-index: 2;
             background: #1c1c1e;
             border-radius: 12px;
+            padding: 16px;
             transition: transform 0.3s ease;
             touch-action: pan-y;
         }
         
-        .history-card-delete-bg {
+        .library-exercise-move-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 80px;
+            background: #0a84ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            z-index: 1;
+        }
+        
+        .library-exercise-move-btn {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        /* Workout selector modal */
+        .workout-selector-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .workout-selector-modal.active {
+            display: flex;
+        }
+        
+        .workout-selector-content {
+            background: #1c1c1e;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .workout-selector-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .workout-selector-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .workout-selector-btn {
+            background: #2c2c2e;
+            border: none;
+            color: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .workout-selector-btn:active {
+            background: #0a84ff;
+        }
+        
+        .workout-selector-cancel {
+            background: #ff3b30;
+            margin-top: 10px;
+        }
+        
+        .workout-selector-new {
+            background: #0a84ff;
+            margin-top: 10px;
+        }
+        
+        .new-workout-input {
+            width: 100%;
+            background: #2c2c2e;
+            border: 2px solid #3a3a3c;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+        
+        .new-workout-input:focus {
+            outline: none;
+            border-color: #0a84ff;
+        }
+        
+        .new-workout-input::placeholder {
+            color: #8e8e93;
+        }
+        
+        /* Exercise card with swipe delete in workout */
+        .workout-exercise-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .workout-exercise-content {
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s ease;
+            touch-action: pan-y;
+        }
+        
+        .workout-exercise-delete-bg {
             position: absolute;
             top: 0;
             right: 0;
@@ -379,10 +572,9 @@
             z-index: 1;
         }
         
-        .history-card-delete-btn {
+        .workout-exercise-delete-btn {
             color: #fff;
             font-size: 24px;
-            font-weight: 600;
             cursor: pointer;
             user-select: none;
         }
@@ -390,12 +582,13 @@
 </head>
 <body>
     <div class="header">
-        <h1>Workout Tracker</h1>
+        <h1>Body Tea 🍵</h1>
     </div>
     
     <div class="tabs">
         <button class="tab active" data-tab="workout">Workouts</button>
         <button class="tab" data-tab="history">History</button>
+        <button class="tab" data-tab="library">Library</button>
     </div>
     
     <div id="workout-tab" class="tab-content">
@@ -408,12 +601,16 @@
         </div>
         
         <div id="active-workout" style="display: none;">
+            <div id="exercise-list" class="exercise-list"></div>
             <div class="workout-controls">
                 <button class="control-btn" onclick="finishWorkout()">Finish Workout</button>
                 <button class="control-btn secondary" onclick="cancelWorkout()">Cancel</button>
             </div>
-            <div id="exercise-list" class="exercise-list"></div>
         </div>
+    </div>
+    
+    <div id="library-tab" class="tab-content" style="display: none;">
+        <div id="library-list" class="exercise-list"></div>
     </div>
     
     <div id="history-tab" class="tab-content" style="display: none;">
@@ -432,66 +629,179 @@
             <div id="detail-exercises"></div>
         </div>
     </div>
+    
+    <div id="workout-selector-modal" class="workout-selector-modal">
+        <div class="workout-selector-content">
+            <div class="workout-selector-title">Add to Workout</div>
+            <div class="workout-selector-list" id="workout-selector-list"></div>
+            <button class="workout-selector-btn workout-selector-cancel" onclick="closeWorkoutSelector()">Cancel</button>
+        </div>
+    </div>
 
     <script>
         const workouts = {
             upper: {
                 name: 'Upper',
                 exercises: [
-                    { name: 'Incline dumbbell press', sets: 3, reps: '10' },
-                    { name: 'Pullup/deadlift', sets: 3, reps: '15' },
-                    { name: 'Overhead Tricep Extensions', sets: 3, reps: '10' },
-                    { name: 'Preacher hammer curls', sets: 3, reps: '10' },
-                    { name: 'Crunch machine', sets: 3, reps: '10' }
+                    { name: 'Incline Dumbbell Press', sets: 3, reps: '10', muscle: 'chest', muscleLabel: 'CMP Chest', repRange: [5,15], weights: [25,35,40,50,55,60] },
+                    { name: 'Pullup', sets: 3, reps: '15', muscle: 'back', muscleLabel: 'CMP Back', repRange: [5,15], weights: [25,35,40,50,55,60] },
+                    { name: 'Overhead Tricep Extensions', sets: 3, reps: '10', muscle: 'arms', muscleLabel: 'ISO Triceps', repRange: [5,15], weights: [25,35,40,50,55,60] },
+                    { name: 'Preacher Hammer Curls', sets: 3, reps: '10', muscle: 'arms', muscleLabel: 'ISO Biceps', repRange: [5,15], weights: [25,35,40,50,55,60] },
+                    { name: 'Crunch Machine', sets: 3, reps: '10', muscle: 'core', muscleLabel: 'ISO Abs', repRange: [5,15], weights: [45,60,75,90,105] }
                 ]
             },
             lower: {
                 name: 'Lower',
                 exercises: [
-                    { name: 'Squat', sets: 3, reps: '10' },
-                    { name: 'Hip thrust', sets: 3, reps: '10' },
-                    { name: 'Leg extensions', sets: 3, reps: '15' },
-                    { name: 'Calf raises', sets: 4, reps: '15' },
-                    { name: 'Dragonfly variation', sets: 3, reps: '15' }
+                    { name: 'Squat', sets: 3, reps: '10', muscle: 'legs', muscleLabel: 'CMP Quads', repRange: [5,15], weights: [115,135,155,185,205,225] },
+                    { name: 'Hip Thrust', sets: 3, reps: '10', muscle: 'legs', muscleLabel: 'ISO Glutes', repRange: [5,15], weights: [115,135,155,185,205,225] },
+                    { name: 'Leg Extensions', sets: 3, reps: '15', muscle: 'legs', muscleLabel: 'ISO Quads', repRange: [5,15], weights: [45,60,75,90,105] },
+                    { name: 'Calf Raises', sets: 4, reps: '15', muscle: 'legs', muscleLabel: 'ISO Calves', repRange: [10,20], weights: [45,60,75,90,105] },
+                    { name: 'Dragonfly Variation', sets: 3, reps: '15', muscle: 'core', muscleLabel: 'ISO Abs', repRange: [5,15], weights: [0] }
                 ]
             },
             push: {
                 name: 'Push',
                 exercises: [
-                    { name: 'Bench press', sets: 3, reps: '8-10' },
-                    { name: 'Shoulder press', sets: 3, reps: '10-15' },
-                    { name: 'Pec dec', sets: 3, reps: '15-20' },
-                    { name: 'Cable lateral raise', sets: 3, reps: '10-15' },
-                    { name: 'Tricep overhead extension', sets: 3, reps: '5-10' },
-                    { name: 'Cable kickback', sets: 3, reps: '10-15' }
+                    { name: 'Bench Press', sets: 3, reps: '8', muscle: 'chest', muscleLabel: 'CMP Chest', repRange: [5,15], weights: [115,135,155,185,205,225] },
+                    { name: 'Shoulder Press', sets: 3, reps: '10', muscle: 'shoulders', muscleLabel: 'CMP Delts', repRange: [5,15], weights: [45,65,85,95,115,135] },
+                    { name: 'Pec Dec', sets: 3, reps: '15', muscle: 'chest', muscleLabel: 'ISO Chest', repRange: [5,15], weights: [45,60,75,90,105] },
+                    { name: 'Cable Lateral Raise', sets: 3, reps: '10', muscle: 'shoulders', muscleLabel: 'ISO Delts', repRange: [5,15], weights: [45,60,75,90,105] },
+                    { name: 'Tricep Overhead Extension', sets: 3, reps: '5', muscle: 'arms', muscleLabel: 'ISO Triceps', repRange: [5,15], weights: [45,60,75,90,105] },
+                    { name: 'Cable Kickback', sets: 3, reps: '10', muscle: 'arms', muscleLabel: 'ISO Triceps', repRange: [5,15], weights: [45,60,75,90,105] }
                 ]
             },
             pull: {
                 name: 'Pull',
                 exercises: [
-                    { name: 'Close grip lat pulldown', sets: 3, reps: '10-15' },
-                    { name: 'Chest supported machine row', sets: 3, reps: '10-15' },
-                    { name: 'Close Grip Cable Row', sets: 2, reps: '15-20' },
-                    { name: 'Reverse cable flies', sets: 3, reps: '15-20' },
-                    { name: 'Shrugs', sets: 4, reps: '15' }
+                    { name: 'Close Grip Lat Pulldown', sets: 3, reps: '10', muscle: 'back', muscleLabel: 'CMP Lats', repRange: [5,15], weights: [45,60,75,90,105] },
+                    { name: 'Chest Supported Machine Row', sets: 3, reps: '10', muscle: 'back', muscleLabel: 'CMP Mid Back', repRange: [5,15], weights: [45,60,75,90,105] },
+                    { name: 'Dumbbell Shrugs', sets: 4, reps: '15', muscle: 'shoulders', muscleLabel: 'ISO Traps', repRange: [10,20], weights: [25,35,40,50,55,60] }
                 ]
             },
             legs: {
                 name: 'Legs',
                 exercises: [
-                    { name: 'Seated leg curl', sets: 3, reps: '10-15' },
-                    { name: 'Smith/regular squat', sets: 3, reps: '5-10' },
-                    { name: 'Romanian deadlift', sets: 3, reps: '5-10' },
-                    { name: 'Leg extensions', sets: 3, reps: '5-10' },
-                    { name: 'Hip adduction', sets: 2, reps: '15-20' },
-                    { name: 'Hip abduction', sets: 2, reps: '15-20' },
-                    { name: 'Standing calf raises', sets: 4, reps: '10-15' }
+                    { name: 'Seated Leg Curl', sets: 3, reps: '10', muscle: 'legs', muscleLabel: 'ISO Hamstrings', repRange: [5,15], weights: [45,60,75,90,105] },
+                    { name: 'Squat', sets: 3, reps: '5', muscle: 'legs', muscleLabel: 'CMP Quads', repRange: [5,15], weights: [115,135,155,185,205,225] },
+                    { name: 'Leg Extensions', sets: 3, reps: '5', muscle: 'legs', muscleLabel: 'ISO Quads', repRange: [5,15], weights: [45,60,75,90,105] },
+                    { name: 'Hip Adduction', sets: 2, reps: '15', muscle: 'legs', muscleLabel: 'ISO Inner Thighs', repRange: [5,15], weights: [45,60,75,90,105] },
+                    { name: 'Hip Abduction', sets: 2, reps: '15', muscle: 'legs', muscleLabel: 'ISO Glutes', repRange: [5,15], weights: [45,60,75,90,105] },
+                    { name: 'Calf Raises', sets: 4, reps: '10', muscle: 'legs', muscleLabel: 'ISO Calves', repRange: [10,20], weights: [45,60,75,90,105] }
                 ]
             }
         };
 
+        // Exercise library - sorted by: traps, shoulders, chest, arms, back, core, legs (glutes→quads→hamstrings→calves)
+        const exerciseLibrary = [
+            // Traps
+            { name: 'Dumbbell Shrugs', sets: 4, reps: '15', muscle: 'shoulders', muscleLabel: 'ISO Traps', repRange: [10,20], weights: [25,35,40,50,55,60] },
+            
+            // Shoulders
+            { name: 'Shoulder Press', sets: 3, reps: '10', muscle: 'shoulders', muscleLabel: 'CMP Delts', repRange: [5,15], weights: [45,65,85,95,115,135] },
+            { name: 'Overhead Press', sets: 3, reps: '10', muscle: 'shoulders', muscleLabel: 'CMP Delts', repRange: [5,15], weights: [45,65,85,95,115,135] },
+            { name: 'Cable Lateral Raise', sets: 3, reps: '10', muscle: 'shoulders', muscleLabel: 'ISO Delts', repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'Rear Delt Cable Pull', sets: 3, reps: '10', muscle: 'shoulders', muscleLabel: 'ISO Rear Delts', repRange: [5,15], weights: [45,60,75,90,105] },
+            
+            // Chest
+            { name: 'Incline Dumbbell Press', sets: 3, reps: '10', muscle: 'chest', muscleLabel: 'CMP Chest', repRange: [5,15], weights: [25,35,40,50,55,60] },
+            { name: 'Bench Press', sets: 3, reps: '8', muscle: 'chest', muscleLabel: 'CMP Chest', repRange: [5,15], weights: [115,135,155,185,205,225] },
+            { name: 'Pec Dec', sets: 3, reps: '15', muscle: 'chest', muscleLabel: 'ISO Chest', repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'Pushups', sets: 3, reps: '10', muscle: 'chest', muscleLabel: 'CMP Chest', repRange: [5,15], weights: [0] },
+            { name: 'Dips', sets: 3, reps: '8', muscle: 'chest', muscleLabel: 'CMP Chest', repRange: [5,15], weights: [0,25,35,40,50,55,60] },
+            
+            // Arms
+            { name: 'Overhead Tricep Extensions', sets: 3, reps: '10', muscle: 'arms', muscleLabel: 'ISO Triceps', repRange: [5,15], weights: [25,35,40,50,55,60] },
+            { name: 'Preacher Hammer Curls', sets: 3, reps: '10', muscle: 'arms', muscleLabel: 'ISO Biceps', repRange: [5,15], weights: [25,35,40,50,55,60] },
+            { name: 'Tricep Overhead Extension', sets: 3, reps: '5', muscle: 'arms', muscleLabel: 'ISO Triceps', repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'Cable Kickback', sets: 3, reps: '10', muscle: 'arms', muscleLabel: 'ISO Triceps', repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'Bayesian Curl', sets: 3, reps: '10', muscle: 'arms', muscleLabel: 'ISO Bicep', repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'JM Press', sets: 3, reps: '8', muscle: 'arms', muscleLabel: 'CMP Triceps', repRange: [5,15], weights: [45,65,85,95,115,135] },
+            { name: 'Bicep Curls', sets: 3, reps: '10', muscle: 'arms', muscleLabel: 'ISO Biceps', repRange: [5,15], weights: [25,35,40,50,55,60] },
+            
+            // Back
+            { name: 'Pullup', sets: 3, reps: '15', muscle: 'back', muscleLabel: 'CMP Back', repRange: [5,15], weights: [0,25,35,40,50,55,60] },
+            { name: 'Close Grip Lat Pulldown', sets: 3, reps: '10', muscle: 'back', muscleLabel: 'CMP Lats', repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'Chest Supported Machine Row', sets: 3, reps: '10', muscle: 'back', muscleLabel: 'CMP Mid Back', repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'Lat Pullover', sets: 3, reps: '10', muscle: 'back', muscleLabel: 'ISO Lats', repRange: [5,15], weights: [25,35,40,50,55,60] },
+            { name: 'Romanian Deadlift', sets: 3, reps: '8', muscle: 'back', muscleLabel: 'CMP Hamstrings', repRange: [5,15], weights: [115,135,155,185,205,225] },
+            
+            // Core
+            { name: 'Crunch Machine', sets: 3, reps: '10', muscle: 'core', muscleLabel: 'ISO Abs', repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'Dragonfly Variation', sets: 3, reps: '15', muscle: 'core', muscleLabel: 'ISO Abs', repRange: [5,15], weights: [0] },
+            { name: 'Oblique Twist', sets: 3, reps: '15', muscle: 'core', muscleLabel: 'ISO Obliques', repRange: [5,15], weights: [25,35,40,50,55,60] },
+            
+            // Legs - Glutes
+            { name: 'Hip Thrust', sets: 3, reps: '10', muscle: 'legs', muscleLabel: 'ISO Glutes', legOrder: 1, repRange: [5,15], weights: [115,135,155,185,205,225] },
+            { name: 'Hip Abduction', sets: 2, reps: '15', muscle: 'legs', muscleLabel: 'ISO Glutes', legOrder: 1, repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'Glute Toe Taps', sets: 3, reps: '15', muscle: 'legs', muscleLabel: 'ISO Glutes', legOrder: 1, repRange: [5,15], weights: [0] },
+            { name: 'Bulgarian Split Squat', sets: 3, reps: '10', muscle: 'legs', muscleLabel: 'CMP Glutes', legOrder: 1, repRange: [5,15], weights: [25,35,40,50,55,60] },
+            
+            // Legs - Quads
+            { name: 'Squat', sets: 3, reps: '10', muscle: 'legs', muscleLabel: 'CMP Quads', legOrder: 2, repRange: [5,15], weights: [115,135,155,185,205,225] },
+            { name: 'Leg Extensions', sets: 3, reps: '15', muscle: 'legs', muscleLabel: 'ISO Quads', legOrder: 2, repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'Walking Lunges', sets: 3, reps: '12', muscle: 'legs', muscleLabel: 'CMP Quads', legOrder: 2, repRange: [5,15], weights: [25,35,40,50,55,60] },
+            
+            // Legs - Hamstrings
+            { name: 'Seated Leg Curl', sets: 3, reps: '10', muscle: 'legs', muscleLabel: 'ISO Hamstrings', legOrder: 3, repRange: [5,15], weights: [45,60,75,90,105] },
+            { name: 'Hip Adduction', sets: 2, reps: '15', muscle: 'legs', muscleLabel: 'ISO Inner Thighs', legOrder: 3, repRange: [5,15], weights: [45,60,75,90,105] },
+            
+            // Legs - Calves
+            { name: 'Calf Raises', sets: 4, reps: '15', muscle: 'legs', muscleLabel: 'ISO Calves', legOrder: 4, repRange: [10,20], weights: [45,60,75,90,105] }
+        ];
+
         let currentWorkout = null;
         let workoutData = {};
+        let isReorderMode = false;
+        let draggedElement = null;
+        let selectedExerciseForMove = null;
+        let showingNewWorkoutInput = false;
+
+        // Load workouts and library from localStorage on startup
+        function loadWorkoutsFromStorage() {
+            const savedWorkouts = localStorage.getItem('workouts');
+            const savedLibrary = localStorage.getItem('exerciseLibrary');
+            
+            if (savedWorkouts) {
+                try {
+                    const parsed = JSON.parse(savedWorkouts);
+                    Object.assign(workouts, parsed);
+                } catch (e) {
+                    console.error('Error loading workouts:', e);
+                }
+            }
+            
+            if (savedLibrary) {
+                try {
+                    const parsed = JSON.parse(savedLibrary);
+                    exerciseLibrary.length = 0;
+                    exerciseLibrary.push(...parsed);
+                } catch (e) {
+                    console.error('Error loading library:', e);
+                }
+            }
+        }
+
+        // Save workouts to localStorage
+        function saveWorkoutsToStorage() {
+            try {
+                localStorage.setItem('workouts', JSON.stringify(workouts));
+            } catch (e) {
+                console.error('Error saving workouts:', e);
+            }
+        }
+
+        // Save library to localStorage
+        function saveLibraryToStorage() {
+            try {
+                localStorage.setItem('exerciseLibrary', JSON.stringify(exerciseLibrary));
+            } catch (e) {
+                console.error('Error saving library:', e);
+            }
+        }
+
+        // Load data on startup
+        loadWorkoutsFromStorage();
 
         // Tab switching
         document.querySelectorAll('.tab').forEach(tab => {
@@ -507,6 +817,8 @@
                 
                 if (tabName === 'history') {
                     loadHistory();
+                } else if (tabName === 'library') {
+                    loadLibrary();
                 }
             });
         });
@@ -522,6 +834,7 @@
         function startWorkout(workoutKey) {
             currentWorkout = workoutKey;
             workoutData = {};
+            isReorderMode = false;
             
             document.getElementById('workout-select').style.display = 'none';
             document.getElementById('active-workout').style.display = 'block';
@@ -535,86 +848,492 @@
             container.innerHTML = '';
             
             workout.exercises.forEach((exercise, exerciseIndex) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'workout-exercise-wrapper';
+                wrapper.dataset.index = exerciseIndex;
+                
+                const deleteBg = document.createElement('div');
+                deleteBg.className = 'workout-exercise-delete-bg';
+                deleteBg.innerHTML = '<div class="workout-exercise-delete-btn">🗑️</div>';
+                
+                const content = document.createElement('div');
+                content.className = 'workout-exercise-content';
+                
                 const card = document.createElement('div');
                 card.className = 'exercise-card';
+                card.dataset.index = exerciseIndex;
                 
                 const header = document.createElement('div');
                 header.className = 'exercise-header';
                 header.innerHTML = `
-                    <div>
-                        <div class="exercise-name">${exercise.name}</div>
-                        <div class="exercise-target">${exercise.sets} × ${exercise.reps}</div>
+                    <div class="exercise-name-container">
+                        <div>
+                            <div class="exercise-name">${exercise.name}</div>
+                        </div>
                     </div>
+                    <span class="muscle-tag ${exercise.muscle}" style="font-size: 9px; padding: 3px 6px;">${exercise.muscleLabel}</span>
                 `;
                 card.appendChild(header);
                 
                 const setsContainer = document.createElement('div');
                 setsContainer.className = 'sets-container';
                 
-                for (let i = 0; i < exercise.sets; i++) {
-                    const setRow = document.createElement('div');
-                    setRow.className = 'set-row';
-                    
-                    // Create reps dropdown (1-25)
-                    let repsOptions = '<option value="">Reps</option>';
-                    for (let r = 1; r <= 25; r++) {
-                        repsOptions += `<option value="${r}">${r}</option>`;
-                    }
-                    
-                    // Create weight dropdown (30-200 in increments of 10)
-                    let weightOptions = '<option value="">Weight</option>';
-                    for (let w = 30; w <= 200; w += 10) {
-                        weightOptions += `<option value="${w}">${w}</option>`;
-                    }
-                    
-                    setRow.innerHTML = `
-                        <div class="set-label">${i + 1}</div>
-                        <select class="set-input" data-exercise="${exerciseIndex}" data-set="${i}" data-type="reps">${repsOptions}</select>
-                        <select class="set-input" data-exercise="${exerciseIndex}" data-set="${i}" data-type="weight">${weightOptions}</select>
-                        <div class="check-btn" data-exercise="${exerciseIndex}" data-set="${i}"></div>
-                    `;
-                    
-                    setsContainer.appendChild(setRow);
+                // Single row for reps and weight selection
+                const setRow = document.createElement('div');
+                setRow.className = 'set-row';
+                setRow.style.gridTemplateColumns = '1fr auto 1fr auto';
+                setRow.style.alignItems = 'center';
+                setRow.style.gap = '8px';
+                
+                // Generate rep options based on exercise repRange
+                let repsOptions = '<option value="">-</option>';
+                const [minRep, maxRep] = exercise.repRange || [5, 15];
+                for (let r = minRep; r <= maxRep; r++) {
+                    repsOptions += `<option value="${r}">${r}</option>`;
                 }
                 
+                // Generate weight options based on exercise weights array
+                let weightOptions = '<option value="">-</option>';
+                const weights = exercise.weights || [25,35,40,50,55,60];
+                weights.forEach(w => {
+                    if (w === 0) {
+                        weightOptions += `<option value="0">BW</option>`;
+                    } else {
+                        weightOptions += `<option value="${w}">${w}</option>`;
+                    }
+                });
+                
+                setRow.innerHTML = `
+                    <select class="set-input" data-exercise="${exerciseIndex}" data-type="reps">${repsOptions}</select>
+                    <div style="font-size: 15px; color: #fff; font-weight: 500;">at</div>
+                    <select class="set-input" data-exercise="${exerciseIndex}" data-type="weight">${weightOptions}</select>
+                    <button class="set-counter-btn" data-exercise="${exerciseIndex}">
+                        <span class="set-counter-text">0</span>
+                    </button>
+                `;
+                
+                setsContainer.appendChild(setRow);
+                
                 card.appendChild(setsContainer);
-                container.appendChild(card);
+                content.appendChild(card);
+                wrapper.appendChild(deleteBg);
+                wrapper.appendChild(content);
+                container.appendChild(wrapper);
+                
+                // Long press for reorder mode
+                let pressTimer;
+                card.addEventListener('touchstart', (e) => {
+                    pressTimer = setTimeout(() => {
+                        enterReorderMode();
+                    }, 500);
+                });
+                
+                card.addEventListener('touchend', () => {
+                    clearTimeout(pressTimer);
+                });
+                
+                card.addEventListener('touchmove', () => {
+                    clearTimeout(pressTimer);
+                });
+                
+                // Swipe to delete
+                let startX = 0;
+                let currentX = 0;
+                let isDragging = false;
+                
+                content.addEventListener('touchstart', (e) => {
+                    if (isReorderMode) return;
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                    content.style.transition = 'none';
+                });
+                
+                content.addEventListener('touchmove', (e) => {
+                    if (!isDragging || isReorderMode) return;
+                    currentX = e.touches[0].clientX;
+                    const diff = currentX - startX;
+                    
+                    if (diff < 0 && Math.abs(diff) <= 80) {
+                        content.style.transform = `translateX(${diff}px)`;
+                    }
+                });
+                
+                content.addEventListener('touchend', () => {
+                    if (!isDragging || isReorderMode) return;
+                    isDragging = false;
+                    const diff = currentX - startX;
+                    content.style.transition = 'transform 0.3s ease';
+                    
+                    if (Math.abs(diff) > 40) {
+                        content.style.transform = 'translateX(-80px)';
+                    } else {
+                        content.style.transform = 'translateX(0)';
+                    }
+                });
+                
+                // Delete button
+                deleteBg.addEventListener('click', () => {
+                    removeExerciseFromWorkout(exerciseIndex);
+                });
             });
             
-            // Add event listeners
+            // Add event listeners for inputs
             document.querySelectorAll('.set-input').forEach(input => {
                 input.addEventListener('change', handleSetInput);
             });
             
-            document.querySelectorAll('.check-btn').forEach(btn => {
-                btn.addEventListener('click', handleSetCheck);
+            // Add event listeners for set counter buttons
+            document.querySelectorAll('.set-counter-btn').forEach(btn => {
+                btn.addEventListener('click', handleSetCounter);
             });
+        }
+        
+        function handleSetCounter(e) {
+            const btn = e.currentTarget;
+            const exerciseIndex = btn.dataset.exercise;
+            
+            // Initialize set count if not exists
+            if (!workoutData[exerciseIndex]) {
+                workoutData[exerciseIndex] = {};
+            }
+            if (!workoutData[exerciseIndex].completedSets) {
+                workoutData[exerciseIndex].completedSets = 0;
+            }
+            
+            // Increment set count
+            workoutData[exerciseIndex].completedSets++;
+            
+            const completedSets = workoutData[exerciseIndex].completedSets;
+            
+            // Update button display
+            btn.querySelector('.set-counter-text').textContent = completedSets;
+            
+            // Toggle active class
+            if (completedSets > 0) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        }
+
+        function enterReorderMode() {
+            isReorderMode = true;
+            const cards = document.querySelectorAll('.exercise-card');
+            cards.forEach(card => {
+                card.classList.add('wiggle');
+            });
+            
+            // Enable drag and drop
+            const container = document.getElementById('exercise-list');
+            container.style.cursor = 'move';
+            
+            // Make exercises draggable
+            const wrappers = document.querySelectorAll('.workout-exercise-wrapper');
+            wrappers.forEach(wrapper => {
+                wrapper.draggable = true;
+                
+                wrapper.addEventListener('dragstart', (e) => {
+                    draggedElement = wrapper;
+                    wrapper.style.opacity = '0.5';
+                });
+                
+                wrapper.addEventListener('dragend', (e) => {
+                    wrapper.style.opacity = '1';
+                });
+                
+                wrapper.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const afterElement = getDragAfterElement(container, e.clientY);
+                    if (afterElement == null) {
+                        container.appendChild(draggedElement);
+                    } else {
+                        container.insertBefore(draggedElement, afterElement);
+                    }
+                });
+            });
+            
+            // Exit reorder mode on tap outside
+            setTimeout(() => {
+                document.addEventListener('click', exitReorderMode, { once: true });
+            }, 100);
+        }
+
+        function exitReorderMode() {
+            isReorderMode = false;
+            const cards = document.querySelectorAll('.exercise-card');
+            cards.forEach(card => {
+                card.classList.remove('wiggle');
+            });
+            
+            // Save new order
+            const wrappers = document.querySelectorAll('.workout-exercise-wrapper');
+            const newOrder = [];
+            wrappers.forEach(wrapper => {
+                const index = parseInt(wrapper.dataset.index);
+                newOrder.push(workouts[currentWorkout].exercises[index]);
+            });
+            workouts[currentWorkout].exercises = newOrder;
+            
+            saveWorkoutsToStorage();
+            renderExercises();
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.workout-exercise-wrapper:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function removeExerciseFromWorkout(index) {
+            const exercise = workouts[currentWorkout].exercises[index];
+            
+            // Only add to library if it doesn't already exist
+            const existsInLibrary = exerciseLibrary.some(ex => ex.name === exercise.name);
+            if (!existsInLibrary) {
+                exerciseLibrary.push(exercise);
+                sortExerciseLibrary();
+                saveLibraryToStorage();
+            }
+            
+            workouts[currentWorkout].exercises.splice(index, 1);
+            saveWorkoutsToStorage();
+            renderExercises();
+        }
+        
+        function sortExerciseLibrary() {
+            const order = ['shoulders', 'chest', 'arms', 'back', 'core', 'legs'];
+            exerciseLibrary.sort((a, b) => {
+                const orderA = order.indexOf(a.muscle);
+                const orderB = order.indexOf(b.muscle);
+                
+                if (orderA !== orderB) {
+                    return orderA - orderB;
+                }
+                
+                // If both are legs, sort by legOrder
+                if (a.muscle === 'legs' && b.muscle === 'legs') {
+                    return (a.legOrder || 0) - (b.legOrder || 0);
+                }
+                
+                return 0;
+            });
+        }
+
+        function loadLibrary() {
+            const container = document.getElementById('library-list');
+            container.innerHTML = '';
+            
+            if (exerciseLibrary.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📚</div>
+                        <div>Exercise library is empty.</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            exerciseLibrary.forEach((exercise, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'library-exercise-wrapper';
+                
+                const moveBg = document.createElement('div');
+                moveBg.className = 'library-exercise-move-bg';
+                moveBg.innerHTML = '<div class="library-exercise-move-btn">➕</div>';
+                
+                const content = document.createElement('div');
+                content.className = 'library-exercise-content';
+                content.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                        <div style="font-size: 17px; font-weight: 600;">${exercise.name}</div>
+                        <span class="muscle-tag ${exercise.muscle}" style="font-size: 9px; padding: 3px 6px;">${exercise.muscleLabel}</span>
+                    </div>
+                `;
+                
+                wrapper.appendChild(moveBg);
+                wrapper.appendChild(content);
+                container.appendChild(wrapper);
+                
+                // Swipe right to add to workout
+                let startX = 0;
+                let currentX = 0;
+                let isDragging = false;
+                
+                content.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                    content.style.transition = 'none';
+                });
+                
+                content.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    currentX = e.touches[0].clientX;
+                    const diff = currentX - startX;
+                    
+                    if (diff > 0 && diff <= 80) {
+                        content.style.transform = `translateX(${diff}px)`;
+                    }
+                });
+                
+                content.addEventListener('touchend', () => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    const diff = currentX - startX;
+                    content.style.transition = 'transform 0.3s ease';
+                    
+                    if (diff > 40) {
+                        content.style.transform = 'translateX(80px)';
+                    } else {
+                        content.style.transform = 'translateX(0)';
+                    }
+                });
+                
+                // Add button click
+                moveBg.addEventListener('click', () => {
+                    selectedExerciseForMove = index;
+                    showWorkoutSelector();
+                });
+            });
+        }
+
+        function showWorkoutSelector() {
+            const modal = document.getElementById('workout-selector-modal');
+            const list = document.getElementById('workout-selector-list');
+            list.innerHTML = '';
+            showingNewWorkoutInput = false;
+            
+            // Add existing workouts
+            Object.keys(workouts).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = 'workout-selector-btn';
+                btn.textContent = workouts[key].name;
+                btn.onclick = () => addExerciseToWorkout(key);
+                list.appendChild(btn);
+            });
+            
+            // Add "+ New Workout" button
+            const newWorkoutBtn = document.createElement('button');
+            newWorkoutBtn.className = 'workout-selector-btn workout-selector-new';
+            newWorkoutBtn.textContent = '+ New Workout';
+            newWorkoutBtn.onclick = showNewWorkoutInput;
+            list.appendChild(newWorkoutBtn);
+            
+            modal.classList.add('active');
+        }
+        
+        function showNewWorkoutInput() {
+            if (showingNewWorkoutInput) return;
+            showingNewWorkoutInput = true;
+            
+            const list = document.getElementById('workout-selector-list');
+            
+            // Create input field
+            const inputContainer = document.createElement('div');
+            inputContainer.style.marginTop = '10px';
+            inputContainer.innerHTML = `
+                <input type="text" class="new-workout-input" id="new-workout-name" placeholder="Workout name..." />
+                <button class="workout-selector-btn workout-selector-new" onclick="createNewWorkout()">Create</button>
+            `;
+            
+            list.appendChild(inputContainer);
+            
+            // Focus input
+            setTimeout(() => {
+                document.getElementById('new-workout-name').focus();
+            }, 100);
+        }
+        
+        function createNewWorkout() {
+            const nameInput = document.getElementById('new-workout-name');
+            const workoutName = nameInput.value.trim();
+            
+            if (!workoutName) {
+                alert('Please enter a workout name');
+                return;
+            }
+            
+            // Create new workout key (lowercase, no spaces)
+            const workoutKey = workoutName.toLowerCase().replace(/\s+/g, '_');
+            
+            // Check if workout already exists
+            if (workouts[workoutKey]) {
+                alert('A workout with this name already exists');
+                return;
+            }
+            
+            // Get the selected exercise
+            const exercise = {...exerciseLibrary[selectedExerciseForMove]};
+            
+            // Create new workout
+            workouts[workoutKey] = {
+                name: workoutName,
+                exercises: [exercise]
+            };
+            
+            saveWorkoutsToStorage();
+            
+            closeWorkoutSelector();
+            
+            // Refresh workout buttons
+            refreshWorkoutButtons();
+            
+            alert(`Workout "${workoutName}" created!`);
+        }
+        
+        function refreshWorkoutButtons() {
+            const container = document.getElementById('workout-select');
+            container.innerHTML = '';
+            
+            Object.keys(workouts).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = 'workout-btn';
+                btn.dataset.workout = key;
+                btn.textContent = workouts[key].name;
+                btn.addEventListener('click', () => {
+                    startWorkout(key);
+                });
+                container.appendChild(btn);
+            });
+        }
+
+        function closeWorkoutSelector() {
+            document.getElementById('workout-selector-modal').classList.remove('active');
+            selectedExerciseForMove = null;
+        }
+
+        function addExerciseToWorkout(workoutKey) {
+            const exercise = {...exerciseLibrary[selectedExerciseForMove]}; // Clone the exercise
+            workouts[workoutKey].exercises.push(exercise);
+            saveWorkoutsToStorage();
+            // Don't remove from library - allow duplicates
+            closeWorkoutSelector();
+            loadLibrary();
         }
 
         function handleSetInput(e) {
             const exerciseIndex = e.target.dataset.exercise;
-            const setIndex = e.target.dataset.set;
             const type = e.target.dataset.type;
             const value = e.target.value;
             
             if (!workoutData[exerciseIndex]) {
                 workoutData[exerciseIndex] = {};
             }
-            if (!workoutData[exerciseIndex][setIndex]) {
-                workoutData[exerciseIndex][setIndex] = {};
-            }
             
-            workoutData[exerciseIndex][setIndex][type] = value;
-        }
-
-        function handleSetCheck(e) {
-            e.target.classList.toggle('checked');
+            workoutData[exerciseIndex][type] = value;
         }
 
         function finishWorkout() {
             const workout = workouts[currentWorkout];
             
-            // Save to history
             const history = JSON.parse(localStorage.getItem('workoutHistory') || '[]');
             history.unshift({
                 workout: workout.name,
@@ -632,15 +1351,17 @@
             resetWorkout();
         }
         
-        // Make functions globally accessible for onclick
         window.cancelWorkout = cancelWorkout;
         window.finishWorkout = finishWorkout;
+        window.closeWorkoutSelector = closeWorkoutSelector;
+        window.createNewWorkout = createNewWorkout;
 
         function resetWorkout() {
             document.getElementById('workout-select').style.display = 'block';
             document.getElementById('active-workout').style.display = 'none';
             currentWorkout = null;
             workoutData = {};
+            isReorderMode = false;
         }
 
         function loadHistory() {
@@ -684,7 +1405,6 @@
                 const cardContent = wrapper.querySelector('.history-card-content');
                 const deleteBtn = wrapper.querySelector('.history-card-delete-btn');
                 
-                // Swipe functionality
                 let startX = 0;
                 let currentX = 0;
                 let isDragging = false;
@@ -717,18 +1437,15 @@
                     }
                 });
                 
-                // Click to view details
                 cardContent.addEventListener('click', (e) => {
                     const transform = cardContent.style.transform;
                     if (transform && transform.includes('-80px')) {
-                        // If swiped, close swipe instead of opening detail
                         cardContent.style.transform = 'translateX(0)';
                     } else {
                         showWorkoutDetail(entry);
                     }
                 });
                 
-                // Delete button click
                 deleteBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     deleteWorkout(index);
@@ -753,28 +1470,19 @@
                 const exerciseCard = document.createElement('div');
                 exerciseCard.className = 'detail-exercise-card';
                 
-                const sets = entry.data[exerciseIndex] || {};
-                const setCount = Object.keys(sets).length;
+                const exerciseData = entry.data[exerciseIndex] || {};
                 
-                let setsHTML = '';
-                for (let i = 0; i < exercise.sets; i++) {
-                    const setData = sets[i];
-                    if (setData && (setData.reps || setData.weight)) {
-                        const reps = setData.reps || '-';
-                        const weight = setData.weight || '-';
-                        setsHTML += `
-                            <div class="detail-set-info">
-                                <div class="detail-set-label">Set ${i + 1}</div>
-                                <div class="detail-set-values">${reps} reps × ${weight} lbs</div>
-                            </div>
-                        `;
-                    }
-                }
-                
-                if (setsHTML) {
+                if (exerciseData.reps || exerciseData.weight || exerciseData.completedSets) {
+                    const reps = exerciseData.reps || '-';
+                    const weight = exerciseData.weight === '0' ? 'BW' : (exerciseData.weight || '-');
+                    const completedSets = exerciseData.completedSets || 0;
+                    
                     exerciseCard.innerHTML = `
                         <div class="detail-exercise-name">${exercise.name}</div>
-                        ${setsHTML}
+                        <div class="detail-set-info">
+                            <div class="detail-set-label">${completedSets} sets</div>
+                            <div class="detail-set-values">${reps} reps × ${weight}${weight !== 'BW' && weight !== '-' ? ' lbs' : ''}</div>
+                        </div>
                     `;
                     exercisesContainer.appendChild(exerciseCard);
                 }
