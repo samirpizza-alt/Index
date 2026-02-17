@@ -189,6 +189,12 @@
         }
 
         .reorder-mode .exercise-delete-x { display: flex; }
+        
+        .library-reorder-mode .library-exercise-content .exercise-delete-x { display: flex; }
+        
+        .library-exercise-content.wiggle {
+            animation: wiggle 0.3s ease-in-out infinite;
+        }
 
         /* ── Library ── */
         .library-exercise-wrapper { position: relative; margin-bottom: 12px; }
@@ -817,6 +823,7 @@
     function cancelWorkout() { resetWorkout(); }
 
     function removeFromWorkout(idx) {
+        if (!confirm(`Remove "${workouts[currentWorkout].exercises[idx].name}" from workout?`)) return;
         const exercise = workouts[currentWorkout].exercises[idx];
         if (!exerciseLibrary.some(ex => ex.name === exercise.name)) {
             exerciseLibrary.push(exercise);
@@ -945,6 +952,7 @@
         exerciseLibrary.forEach((exercise, index) => {
             const wrapper = document.createElement('div');
             wrapper.className = 'library-exercise-wrapper';
+            wrapper.dataset.index = index;
 
             const moveBg = document.createElement('div');
             moveBg.className = 'library-exercise-move-bg';
@@ -952,14 +960,34 @@
 
             const content = document.createElement('div');
             content.className = 'library-exercise-content';
+            content.style.position = 'relative';
+            
+            // Delete X button (only visible in reorder mode)
+            const deleteX = document.createElement('div');
+            deleteX.className = 'exercise-delete-x';
+            deleteX.textContent = '✕';
+            deleteX.addEventListener('click', e => {
+                e.stopPropagation();
+                deleteLibraryExercise(index);
+            });
+            
             content.innerHTML = `
                 <div style="font-size:17px; font-weight:600;">${exercise.name}</div>
                 <span class="muscle-tag sm ${exercise.muscle}">${exercise.muscleLabel}</span>
             `;
+            content.insertBefore(deleteX, content.firstChild);
 
             wrapper.appendChild(moveBg);
             wrapper.appendChild(content);
             container.appendChild(wrapper);
+
+            // Long press for reorder mode
+            let pressTimer;
+            content.addEventListener('touchstart', () => {
+                pressTimer = setTimeout(() => enterLibraryReorderMode(), 500);
+            });
+            content.addEventListener('touchend', () => clearTimeout(pressTimer));
+            content.addEventListener('touchmove', () => clearTimeout(pressTimer));
 
             // Swipe right
             let startX = 0, currentX = 0, swiping = false;
@@ -989,6 +1017,82 @@
                 showWorkoutSelector();
             });
         });
+    }
+    
+    let isLibraryReorderMode = false;
+    
+    function enterLibraryReorderMode() {
+        isLibraryReorderMode = true;
+        const container = document.getElementById('library-list');
+        container.classList.add('library-reorder-mode');
+        container.querySelectorAll('.library-exercise-content').forEach(c => c.classList.add('wiggle'));
+
+        container.querySelectorAll('.library-exercise-wrapper').forEach(wrapper => {
+            const content = wrapper.querySelector('.library-exercise-content');
+            let startY = 0, currentY = 0, dragging = false;
+
+            content.addEventListener('touchstart', e => {
+                if (!isLibraryReorderMode) return;
+                e.preventDefault();
+                dragging = true;
+                startY = currentY = e.touches[0].clientY;
+                wrapper.style.opacity = '0.5';
+            }, { passive: false });
+
+            content.addEventListener('touchmove', e => {
+                if (!dragging) return;
+                e.preventDefault();
+                currentY = e.touches[0].clientY;
+                wrapper.style.transform = `translateY(${currentY - startY}px)`;
+
+                const hover = [...container.querySelectorAll('.library-exercise-wrapper')]
+                    .find(w => {
+                        if (w === wrapper) return false;
+                        const r = w.getBoundingClientRect();
+                        return currentY >= r.top && currentY <= r.bottom;
+                    });
+
+                if (hover) {
+                    const wrappers = [...container.querySelectorAll('.library-exercise-wrapper')];
+                    if (wrappers.indexOf(hover) < wrappers.indexOf(wrapper)) {
+                        container.insertBefore(wrapper, hover);
+                    } else {
+                        container.insertBefore(wrapper, hover.nextSibling);
+                    }
+                    startY = currentY;
+                    wrapper.style.transform = '';
+                }
+            }, { passive: false });
+
+            content.addEventListener('touchend', () => {
+                dragging = false;
+                wrapper.style.opacity = '1';
+                wrapper.style.transform = '';
+            });
+        });
+
+        setTimeout(() => document.addEventListener('click', exitLibraryReorderMode, { once: true }), 100);
+    }
+
+    function exitLibraryReorderMode() {
+        isLibraryReorderMode = false;
+        const container = document.getElementById('library-list');
+        container.classList.remove('library-reorder-mode');
+        container.querySelectorAll('.library-exercise-content').forEach(c => c.classList.remove('wiggle'));
+
+        const newOrder = [...container.querySelectorAll('.library-exercise-wrapper')]
+            .map(w => exerciseLibrary[parseInt(w.dataset.index)]);
+        exerciseLibrary.length = 0;
+        exerciseLibrary.push(...newOrder);
+        saveLibrary();
+        loadLibrary();
+    }
+    
+    function deleteLibraryExercise(index) {
+        if (!confirm(`Delete "${exerciseLibrary[index].name}" from library?`)) return;
+        exerciseLibrary.splice(index, 1);
+        saveLibrary();
+        loadLibrary();
     }
 
     // ─────────────────────────────────────────
@@ -1173,8 +1277,8 @@
     }
 
     function deleteHistoryEntry(index) {
-        if (!confirm('Delete this workout?')) return;
         const history = JSON.parse(localStorage.getItem('workoutHistory') || '[]');
+        if (!confirm(`Delete ${history[index].workout} workout from history?`)) return;
         history.splice(index, 1);
         localStorage.setItem('workoutHistory', JSON.stringify(history));
         loadHistory();
