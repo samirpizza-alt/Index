@@ -478,6 +478,16 @@
     <div class="modal-box">
         <div class="modal-title">Create Exercise</div>
         <input type="text" id="new-exercise-name" class="modal-input" placeholder="Exercise name..." />
+        
+        <div class="modal-label">Exercise Type</div>
+        <select id="new-exercise-type" class="set-input" style="width:100%; margin-bottom:12px; padding:12px; font-size:15px;">
+            <option value="">Choose type...</option>
+            <option value="bodyweight">Bodyweight</option>
+            <option value="dumbbell">Dumbbell</option>
+            <option value="barbell">Barbell</option>
+            <option value="machine">Machine</option>
+        </select>
+        
         <div class="modal-label">Select Tag</div>
         <select id="new-exercise-tag-select" class="set-input" style="width:100%; margin-bottom:12px; padding:12px; font-size:15px;" onchange="handleTagSelectChange()">
             <option value="">Choose existing tag...</option>
@@ -758,11 +768,12 @@
             (exercise.weights || [25,35,40,50,55,60]).forEach(w => {
                 weightOptions += `<option value="${w}">${w === 0 ? 'BW' : w}</option>`;
             });
+            weightOptions += '<option value="custom">Custom...</option>';
 
             setRow.innerHTML = `
-                <select class="set-input" data-exercise="${idx}" data-type="reps">${repsOptions}</select>
+                <select class="set-input weight-select" data-exercise="${idx}" data-type="weight">${weightOptions}</select>
                 <div style="font-size:15px; font-weight:500;">at</div>
-                <select class="set-input" data-exercise="${idx}" data-type="weight">${weightOptions}</select>
+                <select class="set-input" data-exercise="${idx}" data-type="reps">${repsOptions}</select>
                 <button class="set-counter-btn" data-exercise="${idx}">
                     <span class="set-counter-text">0</span>
                 </button>
@@ -793,8 +804,42 @@
 
     function handleSetInput(e) {
         const { exercise, type } = e.target.dataset;
+        const value = e.target.value;
+        
+        // Handle custom weight input
+        if (type === 'weight' && value === 'custom') {
+            const customWeight = prompt('Enter custom weight (lbs):');
+            if (customWeight !== null && customWeight.trim() !== '') {
+                const weight = parseFloat(customWeight);
+                if (!isNaN(weight) && weight >= 0) {
+                    if (!workoutData[exercise]) workoutData[exercise] = {};
+                    workoutData[exercise].weight = weight.toString();
+                    
+                    // Update dropdown to show custom value
+                    const select = e.target;
+                    const existingCustom = select.querySelector('option[data-custom="true"]');
+                    if (existingCustom) existingCustom.remove();
+                    
+                    const customOption = document.createElement('option');
+                    customOption.value = weight;
+                    customOption.textContent = weight;
+                    customOption.dataset.custom = 'true';
+                    customOption.selected = true;
+                    select.insertBefore(customOption, select.querySelector('option[value="custom"]'));
+                    return;
+                } else {
+                    alert('Please enter a valid number');
+                    e.target.value = '';
+                    return;
+                }
+            } else {
+                e.target.value = '';
+                return;
+            }
+        }
+        
         if (!workoutData[exercise]) workoutData[exercise] = {};
-        workoutData[exercise][type] = e.target.value;
+        workoutData[exercise][type] = value;
     }
 
     function handleSetCounter(e) {
@@ -962,10 +1007,11 @@
             content.className = 'library-exercise-content';
             content.style.position = 'relative';
             
-            // Delete X button (only visible in reorder mode)
+            // Delete X button (only visible on long press)
             const deleteX = document.createElement('div');
             deleteX.className = 'exercise-delete-x';
             deleteX.textContent = '✕';
+            deleteX.style.display = 'none'; // Hidden by default
             deleteX.addEventListener('click', e => {
                 e.stopPropagation();
                 deleteLibraryExercise(index);
@@ -981,13 +1027,27 @@
             wrapper.appendChild(content);
             container.appendChild(wrapper);
 
-            // Long press for reorder mode
+            // Long press to show delete button
             let pressTimer;
+            let deleteVisible = false;
+            
             content.addEventListener('touchstart', () => {
-                pressTimer = setTimeout(() => enterLibraryReorderMode(), 500);
+                pressTimer = setTimeout(() => {
+                    deleteX.style.display = 'flex';
+                    deleteVisible = true;
+                }, 500);
             });
+            
             content.addEventListener('touchend', () => clearTimeout(pressTimer));
             content.addEventListener('touchmove', () => clearTimeout(pressTimer));
+            
+            // Click anywhere to hide delete button
+            content.addEventListener('click', (e) => {
+                if (deleteVisible && !e.target.classList.contains('exercise-delete-x')) {
+                    deleteX.style.display = 'none';
+                    deleteVisible = false;
+                }
+            });
 
             // Swipe right
             let startX = 0, currentX = 0, swiping = false;
@@ -1017,75 +1077,6 @@
                 showWorkoutSelector();
             });
         });
-    }
-    
-    let isLibraryReorderMode = false;
-    
-    function enterLibraryReorderMode() {
-        isLibraryReorderMode = true;
-        const container = document.getElementById('library-list');
-        container.classList.add('library-reorder-mode');
-        container.querySelectorAll('.library-exercise-content').forEach(c => c.classList.add('wiggle'));
-
-        container.querySelectorAll('.library-exercise-wrapper').forEach(wrapper => {
-            const content = wrapper.querySelector('.library-exercise-content');
-            let startY = 0, currentY = 0, dragging = false;
-
-            content.addEventListener('touchstart', e => {
-                if (!isLibraryReorderMode) return;
-                e.preventDefault();
-                dragging = true;
-                startY = currentY = e.touches[0].clientY;
-                wrapper.style.opacity = '0.5';
-            }, { passive: false });
-
-            content.addEventListener('touchmove', e => {
-                if (!dragging) return;
-                e.preventDefault();
-                currentY = e.touches[0].clientY;
-                wrapper.style.transform = `translateY(${currentY - startY}px)`;
-
-                const hover = [...container.querySelectorAll('.library-exercise-wrapper')]
-                    .find(w => {
-                        if (w === wrapper) return false;
-                        const r = w.getBoundingClientRect();
-                        return currentY >= r.top && currentY <= r.bottom;
-                    });
-
-                if (hover) {
-                    const wrappers = [...container.querySelectorAll('.library-exercise-wrapper')];
-                    if (wrappers.indexOf(hover) < wrappers.indexOf(wrapper)) {
-                        container.insertBefore(wrapper, hover);
-                    } else {
-                        container.insertBefore(wrapper, hover.nextSibling);
-                    }
-                    startY = currentY;
-                    wrapper.style.transform = '';
-                }
-            }, { passive: false });
-
-            content.addEventListener('touchend', () => {
-                dragging = false;
-                wrapper.style.opacity = '1';
-                wrapper.style.transform = '';
-            });
-        });
-
-        setTimeout(() => document.addEventListener('click', exitLibraryReorderMode, { once: true }), 100);
-    }
-
-    function exitLibraryReorderMode() {
-        isLibraryReorderMode = false;
-        const container = document.getElementById('library-list');
-        container.classList.remove('library-reorder-mode');
-        container.querySelectorAll('.library-exercise-content').forEach(c => c.classList.remove('wiggle'));
-
-        const newOrder = [...container.querySelectorAll('.library-exercise-wrapper')]
-            .map(w => exerciseLibrary[parseInt(w.dataset.index)]);
-        exerciseLibrary.length = 0;
-        exerciseLibrary.push(...newOrder);
-        saveLibrary();
-        loadLibrary();
     }
     
     function deleteLibraryExercise(index) {
@@ -1294,6 +1285,7 @@
 
     function openCreateExercise() {
         document.getElementById('new-exercise-name').value     = '';
+        document.getElementById('new-exercise-type').value     = '';
         document.getElementById('new-exercise-tag-select').value = '';
         document.getElementById('new-tag-name').value          = '';
         document.getElementById('custom-tag-fields').style.display = 'none';
@@ -1323,6 +1315,9 @@
         const name = document.getElementById('new-exercise-name').value.trim();
         if (!name) { alert('Please enter an exercise name.'); return; }
 
+        const exerciseType = document.getElementById('new-exercise-type').value;
+        if (!exerciseType) { alert('Please select an exercise type.'); return; }
+
         const tagVal = document.getElementById('new-exercise-tag-select').value;
         if (!tagVal) { alert('Please select or create a tag.'); return; }
 
@@ -1338,6 +1333,25 @@
             [muscleLabel, muscle] = tagVal.split('|');
         }
 
+        // Determine weights based on exercise type
+        let weights;
+        switch(exerciseType) {
+            case 'bodyweight':
+                weights = [0];
+                break;
+            case 'dumbbell':
+                weights = [25, 35, 40, 50, 55, 60];
+                break;
+            case 'barbell':
+                weights = [45, 65, 85, 95, 115, 135, 155, 185, 205, 225];
+                break;
+            case 'machine':
+                weights = [45, 60, 75, 90, 105];
+                break;
+            default:
+                weights = [25, 35, 40, 50, 55, 60];
+        }
+
         let legOrder;
         if (muscle === 'legs') {
             if      (muscleLabel.includes('Glute'))                              legOrder = 1;
@@ -1349,7 +1363,7 @@
         exerciseLibrary.push({
             name, muscle, muscleLabel,
             sets: 3, repRange: [5, 15],
-            weights: [25, 35, 40, 50, 55, 60],
+            weights,
             ...(legOrder !== undefined && { legOrder })
         });
 
