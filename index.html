@@ -758,11 +758,6 @@
             setRow.className = 'set-row';
             setRow.style.gridTemplateColumns = '1fr auto 1fr auto';
 
-            // Inputs row
-            const setRow = document.createElement('div');
-            setRow.className = 'set-row';
-            setRow.style.gridTemplateColumns = '1fr auto 1fr auto';
-
             setRow.innerHTML = `
                 <input type="text" class="set-input text-input" data-exercise="${idx}" data-type="weight" placeholder="Weight" />
                 <div style="font-size:15px; font-weight:500;">at</div>
@@ -789,7 +784,7 @@
             card.addEventListener('touchmove',    () => clearTimeout(pressTimer));
 
             // Input listeners
-            setRow.querySelectorAll('.text-input').forEach(el =>
+            setRow.querySelectorAll('.set-input').forEach(el =>
                 el.addEventListener('input', handleSetInput));
             setRow.querySelector('.set-counter-btn').addEventListener('click', handleSetCounter);
         });
