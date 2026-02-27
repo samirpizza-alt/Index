@@ -537,40 +537,59 @@
     // ─────────────────────────────────────────
 
     const workouts = {
-        upper: { name: 'Upper', exercises: [
-            { name: 'Incline Dumbbell Press',     sets: 3, muscle: 'chest',     muscleLabel: 'CMP Chest',    repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: 'Pullup',                     sets: 3, muscle: 'back',      muscleLabel: 'CMP Back',     repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
-            { name: 'Overhead Tricep Extensions', sets: 3, muscle: 'arms',      muscleLabel: 'ISO Triceps',  repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: 'Preacher Hammer Curls',      sets: 3, muscle: 'arms',      muscleLabel: 'ISO Biceps',   repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: 'Crunch Machine',             sets: 3, muscle: 'core',      muscleLabel: 'ISO Abs',      repRange: [5,15],  weights: [45,60,75,90,105] }
+        upper1: { name: 'Upper 1', exercises: [
+            { name: 'Pullup',                     sets: 2, muscle: 'back',      muscleLabel: 'CMP Back',        repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
+            { name: 'Chest Supported Machine Row',sets: 2, muscle: 'back',      muscleLabel: 'CMP Back',        repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Lat Pullover',               sets: 2, muscle: 'back',      muscleLabel: 'ISO Lats',        repRange: [5,15],  weights: [25,35,40,50,55,60] },
+            { name: 'Incline Dumbbell Press',     sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [25,35,40,50,55,60] },
+            { name: 'Cable Lateral Raise',        sets: 2, muscle: 'shoulders', muscleLabel: 'ISO Delts',       repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Bayesian Curl',              sets: 2, muscle: 'arms',      muscleLabel: 'ISO Bicep',       repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Overhead Tricep Extensions', sets: 2, muscle: 'arms',      muscleLabel: 'ISO Triceps',     repRange: [5,15],  weights: [25,35,40,50,55,60] }
         ]},
-        lower: { name: 'Lower', exercises: [
-            { name: 'Squat',                      sets: 3, muscle: 'legs',      muscleLabel: 'CMP Quads',    repRange: [5,15],  weights: [115,135,155,185,205,225] },
-            { name: 'Hip Thrust',                 sets: 3, muscle: 'legs',      muscleLabel: 'ISO Glutes',   repRange: [5,15],  weights: [115,135,155,185,205,225] },
-            { name: 'Leg Extensions',             sets: 3, muscle: 'legs',      muscleLabel: 'ISO Quads',    repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Calf Raises',                sets: 4, muscle: 'legs',      muscleLabel: 'ISO Calves',   repRange: [10,20], weights: [45,60,75,90,105] },
-            { name: "Captain's Chair Raise",      sets: 3, muscle: 'core',      muscleLabel: 'ISO Abs',      repRange: [5,15],  weights: [0] }
-        ]},
-        push: { name: 'Push', exercises: [
-            { name: 'Bench Press',                sets: 3, muscle: 'chest',     muscleLabel: 'CMP Chest',    repRange: [5,15],  weights: [115,135,155,185,205,225] },
-            { name: 'Shoulder Press',             sets: 3, muscle: 'shoulders', muscleLabel: 'CMP Delts',    repRange: [5,15],  weights: [45,65,85,95,115,135] },
-            { name: 'Pec Dec',                    sets: 3, muscle: 'chest',     muscleLabel: 'ISO Chest',    repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Cable Lateral Raise',        sets: 3, muscle: 'shoulders', muscleLabel: 'ISO Delts',    repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Tricep Overhead Extension',  sets: 3, muscle: 'arms',      muscleLabel: 'ISO Triceps',  repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Cable Kickback',             sets: 3, muscle: 'arms',      muscleLabel: 'ISO Triceps',  repRange: [5,15],  weights: [45,60,75,90,105] }
-        ]},
-        pull: { name: 'Pull', exercises: [
-            { name: 'Close Grip Lat Pulldown',    sets: 3, muscle: 'back',      muscleLabel: 'CMP Lats',     repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Chest Supported Machine Row',sets: 3, muscle: 'back',      muscleLabel: 'CMP Back',     repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Dumbbell Shrugs',            sets: 4, muscle: 'shoulders', muscleLabel: 'ISO Traps',    repRange: [10,20], weights: [25,35,40,50,55,60] }
-        ]},
-        legs: { name: 'Legs', exercises: [
-            { name: 'Seated Leg Curl',            sets: 3, muscle: 'legs',      muscleLabel: 'ISO Hamstrings',  repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Squat',                      sets: 3, muscle: 'legs',      muscleLabel: 'CMP Quads',       repRange: [5,15],  weights: [115,135,155,185,205,225] },
-            { name: 'Leg Extensions',             sets: 3, muscle: 'legs',      muscleLabel: 'ISO Quads',       repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Hip Adduction',              sets: 2, muscle: 'legs',      muscleLabel: 'ISO Inner Thighs',repRange: [5,15],  weights: [45,60,75,90,105] },
+        lower1: { name: 'Lower 1', exercises: [
+            { name: 'Hip Thrust',                 sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [115,135,155,185,205,225] },
+            { name: 'Romanian Deadlift',          sets: 2, muscle: 'back',      muscleLabel: 'CMP Hamstrings',  repRange: [5,15],  weights: [115,135,155,185,205,225] },
             { name: 'Hip Abduction',              sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Calf Raises',                sets: 4, muscle: 'legs',      muscleLabel: 'ISO Calves',      repRange: [10,20], weights: [45,60,75,90,105] }
+            { name: 'Cable Kickback',             sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Calf Raises',                sets: 2, muscle: 'legs',      muscleLabel: 'ISO Calves',      repRange: [10,20], weights: [45,60,75,90,105] },
+            { name: "Captain's Chair Raise",      sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [0] },
+            { name: 'Oblique Twist',              sets: 2, muscle: 'core',      muscleLabel: 'ISO Obliques',    repRange: [5,15],  weights: [25,35,40,50,55,60] }
+        ]},
+        upper2: { name: 'Upper 2', exercises: [
+            { name: 'Incline Dumbbell Press',     sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [25,35,40,50,55,60] },
+            { name: 'Dips',                       sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
+            { name: 'Rear Delt Cable Pull',       sets: 2, muscle: 'shoulders', muscleLabel: 'ISO Rear Delts',  repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Cable Lateral Raise',        sets: 2, muscle: 'shoulders', muscleLabel: 'ISO Delts',       repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Preacher Hammer Curls',      sets: 2, muscle: 'arms',      muscleLabel: 'ISO Biceps',      repRange: [5,15],  weights: [25,35,40,50,55,60] },
+            { name: 'Cable Kickback',             sets: 2, muscle: 'arms',      muscleLabel: 'ISO Triceps',     repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Crunch Machine',             sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [45,60,75,90,105] }
+        ]},
+        lower2: { name: 'Lower 2', exercises: [
+            { name: 'Romanian Deadlift',          sets: 2, muscle: 'back',      muscleLabel: 'CMP Hamstrings',  repRange: [5,15],  weights: [115,135,155,185,205,225] },
+            { name: 'Hip Thrust',                 sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [115,135,155,185,205,225] },
+            { name: 'Cable Kickback',             sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Hip Abduction',              sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Calf Raises',                sets: 2, muscle: 'legs',      muscleLabel: 'ISO Calves',      repRange: [10,20], weights: [45,60,75,90,105] },
+            { name: 'Oblique Twist',              sets: 2, muscle: 'core',      muscleLabel: 'ISO Obliques',    repRange: [5,15],  weights: [25,35,40,50,55,60] },
+            { name: "Captain's Chair Raise",      sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [0] }
+        ]},
+        upper3: { name: 'Upper 3', exercises: [
+            { name: 'Pullup',                     sets: 2, muscle: 'back',      muscleLabel: 'CMP Back',        repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
+            { name: 'Chest Supported Machine Row',sets: 2, muscle: 'back',      muscleLabel: 'CMP Back',        repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Lat Pullover',               sets: 2, muscle: 'back',      muscleLabel: 'ISO Lats',        repRange: [5,15],  weights: [25,35,40,50,55,60] },
+            { name: 'Dips',                       sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
+            { name: 'Bicep Curls',                sets: 2, muscle: 'arms',      muscleLabel: 'ISO Biceps',      repRange: [5,15],  weights: [25,35,40,50,55,60] },
+            { name: 'Overhead Tricep Extensions', sets: 2, muscle: 'arms',      muscleLabel: 'ISO Triceps',     repRange: [5,15],  weights: [25,35,40,50,55,60] },
+            { name: 'Rear Delt Cable Pull',       sets: 2, muscle: 'shoulders', muscleLabel: 'ISO Rear Delts',  repRange: [5,15],  weights: [45,60,75,90,105] }
+        ]},
+        lower3: { name: 'Lower 3', exercises: [
+            { name: 'Hip Thrust',                 sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [115,135,155,185,205,225] },
+            { name: 'Romanian Deadlift',          sets: 2, muscle: 'back',      muscleLabel: 'CMP Hamstrings',  repRange: [5,15],  weights: [115,135,155,185,205,225] },
+            { name: 'Hip Abduction',              sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Cable Kickback',             sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: 'Calf Raises',                sets: 2, muscle: 'legs',      muscleLabel: 'ISO Calves',      repRange: [10,20], weights: [45,60,75,90,105] },
+            { name: 'Crunch Machine',             sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [45,60,75,90,105] },
+            { name: "Captain's Chair Raise",      sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [0] }
         ]}
     };
 
