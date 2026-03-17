@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Workout Tracker</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -72,15 +72,6 @@
             padding: 16px;
             margin-bottom: 12px;
             position: relative;
-        }
-
-        .exercise-card.wiggle {
-            animation: wiggle 0.3s ease-in-out infinite;
-        }
-
-        @keyframes wiggle {
-            0%, 100% { transform: rotate(-1deg); }
-            50%       { transform: rotate(1deg); }
         }
 
         .exercise-header {
@@ -172,28 +163,20 @@
         .exercise-delete-x {
             display: none;
             position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 24px;
-            height: 24px;
+            top: -12px;
+            right: -12px;
+            width: 36px;
+            height: 36px;
             background: #ff3b30;
             border-radius: 50%;
             z-index: 10;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 18px;
             font-weight: 700;
             color: #fff;
             cursor: pointer;
-            border: 2px solid #000;
-        }
-
-        .reorder-mode .exercise-delete-x { display: flex; }
-        
-        .library-reorder-mode .library-exercise-content .exercise-delete-x { display: flex; }
-        
-        .library-exercise-content.wiggle {
-            animation: wiggle 0.3s ease-in-out infinite;
+            border: 3px solid #000;
         }
 
         /* ── Library ── */
@@ -537,60 +520,25 @@
     // ─────────────────────────────────────────
 
     const workouts = {
-        upper1: { name: 'Upper 1', exercises: [
-            { name: 'Pullup',                     sets: 2, muscle: 'back',      muscleLabel: 'CMP Back',        repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
-            { name: 'Chest Supported Machine Row',sets: 2, muscle: 'back',      muscleLabel: 'CMP Back',        repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Lat Pullover',               sets: 2, muscle: 'back',      muscleLabel: 'ISO Lats',        repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: 'Incline Dumbbell Press',     sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: 'Cable Lateral Raise',        sets: 2, muscle: 'shoulders', muscleLabel: 'ISO Delts',       repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Bayesian Curl',              sets: 2, muscle: 'arms',      muscleLabel: 'ISO Bicep',       repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Overhead Tricep Extensions', sets: 2, muscle: 'arms',      muscleLabel: 'ISO Triceps',     repRange: [5,15],  weights: [25,35,40,50,55,60] }
+        outdoor: { name: 'Outdoor Gym', exercises: [
+            { name: 'Pullup',                     sets: 2, muscle: 'back',      muscleLabel: 'CMP Back',        repRange: [5,15],  weights: [0] },
+            { name: 'Pushups',                    sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [0] },
+            { name: 'Dips',                       sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [0] },
+            { name: 'Leg Raises',                 sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [0] },
+            { name: 'Hip Thrust',                 sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [0] },
+            { name: 'Step-Ups',                   sets: 2, muscle: 'legs',      muscleLabel: 'CMP Quads',       repRange: [5,15],  weights: [0] },
+            { name: 'Box Jumps',                  sets: 2, muscle: 'legs',      muscleLabel: 'CMP Quads',       repRange: [5,15],  weights: [0] },
+            { name: 'Calf Raises',                sets: 2, muscle: 'legs',      muscleLabel: 'ISO Calves',      repRange: [10,20], weights: [0] }
         ]},
-        lower1: { name: 'Lower 1', exercises: [
-            { name: 'Hip Thrust',                 sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [115,135,155,185,205,225] },
-            { name: 'Romanian Deadlift',          sets: 2, muscle: 'back',      muscleLabel: 'CMP Hamstrings',  repRange: [5,15],  weights: [115,135,155,185,205,225] },
-            { name: 'Hip Abduction',              sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Cable Kickback',             sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Calf Raises',                sets: 2, muscle: 'legs',      muscleLabel: 'ISO Calves',      repRange: [10,20], weights: [45,60,75,90,105] },
-            { name: "Captain's Chair Raise",      sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [0] },
-            { name: 'Oblique Twist',              sets: 2, muscle: 'core',      muscleLabel: 'ISO Obliques',    repRange: [5,15],  weights: [25,35,40,50,55,60] }
+        morning: { name: 'Morning Routine', exercises: [
+            { name: 'Pushups',                    sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [0] },
+            { name: 'Pullup',                     sets: 2, muscle: 'back',      muscleLabel: 'CMP Back',        repRange: [5,15],  weights: [0] },
+            { name: 'Squat',                      sets: 2, muscle: 'legs',      muscleLabel: 'CMP Quads',       repRange: [5,15],  weights: [0] },
+            { name: 'Glute Bridge',               sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [0] },
+            { name: 'Hip Abduction',              sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [0] }
         ]},
-        upper2: { name: 'Upper 2', exercises: [
-            { name: 'Incline Dumbbell Press',     sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: 'Dips',                       sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
-            { name: 'Rear Delt Cable Pull',       sets: 2, muscle: 'shoulders', muscleLabel: 'ISO Rear Delts',  repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Cable Lateral Raise',        sets: 2, muscle: 'shoulders', muscleLabel: 'ISO Delts',       repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Preacher Hammer Curls',      sets: 2, muscle: 'arms',      muscleLabel: 'ISO Biceps',      repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: 'Cable Kickback',             sets: 2, muscle: 'arms',      muscleLabel: 'ISO Triceps',     repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Crunch Machine',             sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [45,60,75,90,105] }
-        ]},
-        lower2: { name: 'Lower 2', exercises: [
-            { name: 'Romanian Deadlift',          sets: 2, muscle: 'back',      muscleLabel: 'CMP Hamstrings',  repRange: [5,15],  weights: [115,135,155,185,205,225] },
-            { name: 'Hip Thrust',                 sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [115,135,155,185,205,225] },
-            { name: 'Cable Kickback',             sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Hip Abduction',              sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Calf Raises',                sets: 2, muscle: 'legs',      muscleLabel: 'ISO Calves',      repRange: [10,20], weights: [45,60,75,90,105] },
-            { name: 'Oblique Twist',              sets: 2, muscle: 'core',      muscleLabel: 'ISO Obliques',    repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: "Captain's Chair Raise",      sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [0] }
-        ]},
-        upper3: { name: 'Upper 3', exercises: [
-            { name: 'Pullup',                     sets: 2, muscle: 'back',      muscleLabel: 'CMP Back',        repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
-            { name: 'Chest Supported Machine Row',sets: 2, muscle: 'back',      muscleLabel: 'CMP Back',        repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Lat Pullover',               sets: 2, muscle: 'back',      muscleLabel: 'ISO Lats',        repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: 'Dips',                       sets: 2, muscle: 'chest',     muscleLabel: 'CMP Chest',       repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
-            { name: 'Bicep Curls',                sets: 2, muscle: 'arms',      muscleLabel: 'ISO Biceps',      repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: 'Overhead Tricep Extensions', sets: 2, muscle: 'arms',      muscleLabel: 'ISO Triceps',     repRange: [5,15],  weights: [25,35,40,50,55,60] },
-            { name: 'Rear Delt Cable Pull',       sets: 2, muscle: 'shoulders', muscleLabel: 'ISO Rear Delts',  repRange: [5,15],  weights: [45,60,75,90,105] }
-        ]},
-        lower3: { name: 'Lower 3', exercises: [
-            { name: 'Hip Thrust',                 sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [115,135,155,185,205,225] },
-            { name: 'Romanian Deadlift',          sets: 2, muscle: 'back',      muscleLabel: 'CMP Hamstrings',  repRange: [5,15],  weights: [115,135,155,185,205,225] },
-            { name: 'Hip Abduction',              sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Cable Kickback',             sets: 2, muscle: 'legs',      muscleLabel: 'ISO Glutes',      repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: 'Calf Raises',                sets: 2, muscle: 'legs',      muscleLabel: 'ISO Calves',      repRange: [10,20], weights: [45,60,75,90,105] },
-            { name: 'Crunch Machine',             sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [45,60,75,90,105] },
-            { name: "Captain's Chair Raise",      sets: 2, muscle: 'core',      muscleLabel: 'ISO Abs',         repRange: [5,15],  weights: [0] }
-        ]}
+        weighted: { name: 'Weighted Workout', exercises: [] }, // Populated from library (non-BW only)
+        bodyweight: { name: 'Bodyweight Workout', exercises: [] } // Populated from library (BW only)
     };
 
     const exerciseLibrary = [
@@ -598,48 +546,47 @@
         { name: 'Dumbbell Shrugs',            muscle: 'shoulders', muscleLabel: 'ISO Traps',       sets: 4, repRange: [10,20], weights: [25,35,40,50,55,60] },
         // Shoulders - Delts
         { name: 'Cable Lateral Raise',        muscle: 'shoulders', muscleLabel: 'ISO Delts',       sets: 3, repRange: [5,15],  weights: [45,60,75,90,105] },
-        { name: 'Rear Delt Cable Pull',       muscle: 'shoulders', muscleLabel: 'ISO Rear Delts',  sets: 3, repRange: [5,15],  weights: [45,60,75,90,105] },
         { name: 'Shoulder Press',             muscle: 'shoulders', muscleLabel: 'CMP Delts',       sets: 3, repRange: [5,15],  weights: [45,65,85,95,115,135] },
-        { name: 'Overhead Press',             muscle: 'shoulders', muscleLabel: 'CMP Delts',       sets: 3, repRange: [5,15],  weights: [45,65,85,95,115,135] },
         // Chest
         { name: 'Pec Dec',                    muscle: 'chest',     muscleLabel: 'ISO Chest',       sets: 3, repRange: [5,15],  weights: [45,60,75,90,105] },
         { name: 'Incline Dumbbell Press',     muscle: 'chest',     muscleLabel: 'CMP Chest',       sets: 3, repRange: [5,15],  weights: [25,35,40,50,55,60] },
-        { name: 'Bench Press',                muscle: 'chest',     muscleLabel: 'CMP Chest',       sets: 3, repRange: [5,15],  weights: [115,135,155,185,205,225] },
         { name: 'Pushups',                    muscle: 'chest',     muscleLabel: 'CMP Chest',       sets: 3, repRange: [5,15],  weights: [0] },
         { name: 'Dips',                       muscle: 'chest',     muscleLabel: 'CMP Chest',       sets: 3, repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
         // Arms - Biceps
-        { name: 'Preacher Hammer Curls',      muscle: 'arms',      muscleLabel: 'ISO Biceps',      sets: 3, repRange: [5,15],  weights: [25,35,40,50,55,60] },
+        { name: 'Hammer Curls',               muscle: 'arms',      muscleLabel: 'ISO Biceps',      sets: 3, repRange: [5,15],  weights: [25,35,40,50,55,60] },
         { name: 'Bayesian Curl',              muscle: 'arms',      muscleLabel: 'ISO Bicep',       sets: 3, repRange: [5,15],  weights: [45,60,75,90,105] },
         { name: 'Bicep Curls',                muscle: 'arms',      muscleLabel: 'ISO Biceps',      sets: 3, repRange: [5,15],  weights: [25,35,40,50,55,60] },
         // Arms - Triceps
-        { name: 'Overhead Tricep Extensions', muscle: 'arms',      muscleLabel: 'ISO Triceps',     sets: 3, repRange: [5,15],  weights: [25,35,40,50,55,60] },
         { name: 'Tricep Overhead Extension',  muscle: 'arms',      muscleLabel: 'ISO Triceps',     sets: 3, repRange: [5,15],  weights: [45,60,75,90,105] },
-        { name: 'Cable Kickback',             muscle: 'arms',      muscleLabel: 'ISO Triceps',     sets: 3, repRange: [5,15],  weights: [45,60,75,90,105] },
-        { name: 'JM Press',                   muscle: 'arms',      muscleLabel: 'CMP Triceps',     sets: 3, repRange: [5,15],  weights: [45,65,85,95,115,135] },
+        { name: 'Tricep Kickback',            muscle: 'arms',      muscleLabel: 'ISO Triceps',     sets: 3, repRange: [5,15],  weights: [45,60,75,90,105] },
         // Back
-        { name: 'Lat Pullover',               muscle: 'back',      muscleLabel: 'ISO Lats',        sets: 3, repRange: [5,15],  weights: [25,35,40,50,55,60] },
         { name: 'Pullup',                     muscle: 'back',      muscleLabel: 'CMP Back',        sets: 3, repRange: [5,15],  weights: [0,25,35,40,50,55,60] },
         { name: 'Close Grip Lat Pulldown',    muscle: 'back',      muscleLabel: 'CMP Lats',        sets: 3, repRange: [5,15],  weights: [45,60,75,90,105] },
         { name: 'Chest Supported Machine Row',muscle: 'back',      muscleLabel: 'CMP Back',        sets: 3, repRange: [5,15],  weights: [45,60,75,90,105] },
         { name: 'Romanian Deadlift',          muscle: 'back',      muscleLabel: 'CMP Hamstrings',  sets: 3, repRange: [5,15],  weights: [115,135,155,185,205,225] },
         // Core
         { name: 'Crunch Machine',             muscle: 'core',      muscleLabel: 'ISO Abs',         sets: 3, repRange: [5,15],  weights: [45,60,75,90,105] },
-        { name: "Captain's Chair Raise",      muscle: 'core',      muscleLabel: 'ISO Abs',         sets: 3, repRange: [5,15],  weights: [0] },
         { name: 'Oblique Twist',              muscle: 'core',      muscleLabel: 'ISO Obliques',    sets: 3, repRange: [5,15],  weights: [25,35,40,50,55,60] },
         // Legs - Glutes
         { name: 'Hip Thrust',                 muscle: 'legs',      muscleLabel: 'ISO Glutes',      sets: 3, repRange: [5,15],  weights: [115,135,155,185,205,225], legOrder: 1 },
         { name: 'Hip Abduction',              muscle: 'legs',      muscleLabel: 'ISO Glutes',      sets: 2, repRange: [5,15],  weights: [45,60,75,90,105],         legOrder: 1 },
+        { name: 'Cable Kickback',             muscle: 'legs',      muscleLabel: 'ISO Glutes',      sets: 3, repRange: [5,15],  weights: [45,60,75,90,105],         legOrder: 1 },
         { name: 'Glute Toe Taps',             muscle: 'legs',      muscleLabel: 'ISO Glutes',      sets: 3, repRange: [5,15],  weights: [0],                       legOrder: 1 },
         { name: 'Bulgarian Split Squat',      muscle: 'legs',      muscleLabel: 'CMP Glutes',      sets: 3, repRange: [5,15],  weights: [25,35,40,50,55,60],       legOrder: 1 },
         // Legs - Quads
-        { name: 'Squat',                      muscle: 'legs',      muscleLabel: 'CMP Quads',       sets: 3, repRange: [5,15],  weights: [115,135,155,185,205,225], legOrder: 2 },
+        { name: 'Squat',                      muscle: 'legs',      muscleLabel: 'CMP Quads',       sets: 3, repRange: [5,15],  weights: [0,115,135,155,185,205,225], legOrder: 2 },
         { name: 'Leg Extensions',             muscle: 'legs',      muscleLabel: 'ISO Quads',       sets: 3, repRange: [5,15],  weights: [45,60,75,90,105],         legOrder: 2 },
         { name: 'Walking Lunges',             muscle: 'legs',      muscleLabel: 'CMP Quads',       sets: 3, repRange: [5,15],  weights: [25,35,40,50,55,60],       legOrder: 2 },
         // Legs - Hamstrings
         { name: 'Seated Leg Curl',            muscle: 'legs',      muscleLabel: 'ISO Hamstrings',  sets: 3, repRange: [5,15],  weights: [45,60,75,90,105],         legOrder: 3 },
-        { name: 'Hip Adduction',              muscle: 'legs',      muscleLabel: 'ISO Inner Thighs',sets: 2, repRange: [5,15],  weights: [45,60,75,90,105],         legOrder: 3 },
         // Legs - Calves
-        { name: 'Calf Raises',                muscle: 'legs',      muscleLabel: 'ISO Calves',      sets: 4, repRange: [10,20], weights: [45,60,75,90,105],         legOrder: 4 }
+        { name: 'Calf Raises',                muscle: 'legs',      muscleLabel: 'ISO Calves',      sets: 4, repRange: [10,20], weights: [45,60,75,90,105],         legOrder: 4 },
+        
+        // Additional bodyweight exercises
+        { name: 'Leg Raises',                 muscle: 'core',      muscleLabel: 'ISO Abs',         sets: 3, repRange: [5,15],  weights: [0] },
+        { name: 'Step-Ups',                   muscle: 'legs',      muscleLabel: 'CMP Quads',       sets: 3, repRange: [5,15],  weights: [0], legOrder: 2 },
+        { name: 'Box Jumps',                  muscle: 'legs',      muscleLabel: 'CMP Quads',       sets: 3, repRange: [5,15],  weights: [0], legOrder: 2 },
+        { name: 'Glute Bridge',               muscle: 'legs',      muscleLabel: 'ISO Glutes',      sets: 3, repRange: [5,15],  weights: [0], legOrder: 1 }
     ];
 
     // ─────────────────────────────────────────
@@ -648,7 +595,6 @@
 
     let currentWorkout        = null;
     let workoutData           = {};
-    let isReorderMode         = false;
     let selectedExerciseIndex = null;
     let showingNewWorkoutInput = false;
     let selectedSwatchColour  = null;
@@ -686,6 +632,17 @@
 
     loadFromStorage();
     sortLibrary();
+    
+    // Populate Weighted Workout with non-bodyweight exercises
+    workouts.weighted.exercises = exerciseLibrary
+        .filter(ex => ex.weights && ex.weights[0] !== 0)
+        .map(ex => ({...ex}));
+    
+    // Populate Bodyweight Workout with bodyweight-only exercises
+    workouts.bodyweight.exercises = exerciseLibrary
+        .filter(ex => !ex.weights || ex.weights[0] === 0 || (ex.weights.length === 1 && ex.weights[0] === 0))
+        .map(ex => ({...ex}));
+    
     renderWorkoutButtons();
 
     // ─────────────────────────────────────────
@@ -714,12 +671,64 @@
         const container = document.getElementById('workout-select');
         container.innerHTML = '';
         Object.keys(workouts).forEach(key => {
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'relative';
+            wrapper.style.marginBottom = '10px';
+            
             const btn = document.createElement('button');
             btn.className = 'workout-btn';
             btn.textContent = workouts[key].name;
+            btn.style.width = '100%';
             btn.addEventListener('click', () => startWorkout(key));
-            container.appendChild(btn);
+            
+            // Delete X (hidden by default)
+            const deleteX = document.createElement('div');
+            deleteX.className = 'exercise-delete-x';
+            deleteX.textContent = '✕';
+            deleteX.style.display = 'none';
+            deleteX.style.top = '-8px';
+            deleteX.style.right = '-8px';
+            deleteX.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteWorkout(key);
+            });
+            
+            // Long press to show delete
+            let pressTimer;
+            let deleteVisible = false;
+            
+            btn.addEventListener('touchstart', () => {
+                pressTimer = setTimeout(() => {
+                    deleteX.style.display = 'flex';
+                    deleteVisible = true;
+                }, 500);
+            });
+            
+            btn.addEventListener('touchend', () => clearTimeout(pressTimer));
+            btn.addEventListener('touchmove', () => clearTimeout(pressTimer));
+            
+            // Click anywhere to hide delete
+            btn.addEventListener('click', (e) => {
+                if (deleteVisible) {
+                    e.stopPropagation();
+                    deleteX.style.display = 'none';
+                    deleteVisible = false;
+                } else {
+                    startWorkout(key);
+                }
+            });
+            
+            wrapper.appendChild(btn);
+            wrapper.appendChild(deleteX);
+            container.appendChild(wrapper);
         });
+    }
+    
+    function deleteWorkout(key) {
+        if (!confirm(`Delete "${workouts[key].name}" workout?`)) return;
+        delete workouts[key];
+        saveWorkouts();
+        renderWorkoutButtons();
     }
 
     // ─────────────────────────────────────────
@@ -729,7 +738,6 @@
     function startWorkout(key) {
         currentWorkout = key;
         workoutData    = {};
-        isReorderMode  = false;
         document.getElementById('workout-select').style.display  = 'none';
         document.getElementById('active-workout').style.display  = 'block';
         renderExercises();
@@ -740,7 +748,6 @@
         document.getElementById('active-workout').style.display  = 'none';
         currentWorkout = null;
         workoutData    = {};
-        isReorderMode  = false;
     }
 
     function renderExercises() {
@@ -764,7 +771,7 @@
                 removeFromWorkout(idx);
             });
 
-            // Header
+            // Header with name and tag
             const header = document.createElement('div');
             header.className = 'exercise-header';
             header.innerHTML = `
@@ -772,40 +779,107 @@
                 <span class="muscle-tag sm ${exercise.muscle}">${exercise.muscleLabel}</span>
             `;
 
-            // Inputs row
-            const setRow = document.createElement('div');
-            setRow.className = 'set-row';
-            setRow.style.gridTemplateColumns = '1fr auto 1fr auto';
+            // Weight display (for ALL exercises)
+            const defaultReps = exercise.name === 'Calf Raises' || exercise.name === 'Hip Abduction' ? 10 : 8;
+            const isBodyweight = !exercise.weights || exercise.weights[0] === 0;
+            const defaultWeight = isBodyweight ? `BW × ${defaultReps}` : `weight × ${defaultReps}`;
+            
+            // Load saved weight for this exercise
+            const savedWeights = JSON.parse(localStorage.getItem('exerciseWeights') || '{}');
+            const savedWeight = savedWeights[exercise.name] || defaultWeight;
+            
+            const weightInfo = document.createElement('div');
+            weightInfo.className = 'weight-info';
+            weightInfo.style.cssText = 'margin-top: 8px; color: #888; font-size: 14px; cursor: pointer;';
+            weightInfo.textContent = savedWeight;
+            weightInfo.dataset.exerciseName = exercise.name;
+            weightInfo.dataset.editing = 'false';
+            
+            // Double tap to edit
+            let tapCount = 0;
+            let tapTimer;
+            
+            weightInfo.addEventListener('click', (e) => {
+                e.stopPropagation();
+                tapCount++;
+                
+                if (tapCount === 1) {
+                    tapTimer = setTimeout(() => {
+                        tapCount = 0;
+                    }, 300);
+                } else if (tapCount === 2) {
+                    clearTimeout(tapTimer);
+                    tapCount = 0;
+                    
+                    // Convert to input
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = weightInfo.textContent;
+                    input.style.cssText = 'background: #2c2c2e; color: #fff; border: 1px solid #48484a; border-radius: 6px; padding: 4px 8px; font-size: 14px; width: 120px;';
+                    
+                    weightInfo.replaceWith(input);
+                    input.focus();
+                    input.select();
+                    
+                    const saveWeight = () => {
+                        const newValue = input.value.trim() || defaultWeight;
+                        const savedWeights = JSON.parse(localStorage.getItem('exerciseWeights') || '{}');
+                        savedWeights[exercise.name] = newValue;
+                        localStorage.setItem('exerciseWeights', JSON.stringify(savedWeights));
+                        
+                        weightInfo.textContent = newValue;
+                        input.replaceWith(weightInfo);
+                    };
+                    
+                    input.addEventListener('blur', saveWeight);
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') saveWeight();
+                    });
+                }
+            });
 
-            setRow.innerHTML = `
-                <input type="text" class="set-input text-input" data-exercise="${idx}" data-type="weight" placeholder="Weight" />
-                <div style="font-size:15px; font-weight:500;">at</div>
-                <input type="text" class="set-input text-input" data-exercise="${idx}" data-type="reps" placeholder="Reps" />
+            // Set counter button only
+            const setCounter = document.createElement('div');
+            setCounter.style.display = 'flex';
+            setCounter.style.justifyContent = 'flex-end';
+            setCounter.style.marginTop = '12px';
+            setCounter.innerHTML = `
                 <button class="set-counter-btn" data-exercise="${idx}">
                     <span class="set-counter-text">0</span>
                 </button>
             `;
 
-            const setsContainer = document.createElement('div');
-            setsContainer.className = 'sets-container';
-            setsContainer.appendChild(setRow);
-
             card.appendChild(deleteX);
             card.appendChild(header);
-            card.appendChild(setsContainer);
+            card.appendChild(weightInfo);
+            card.appendChild(setCounter);
             wrapper.appendChild(card);
             container.appendChild(wrapper);
 
-            // Long press → reorder mode
+            // Long press → show delete button
             let pressTimer;
-            card.addEventListener('touchstart',  () => { pressTimer = setTimeout(enterReorderMode, 500); });
-            card.addEventListener('touchend',     () => clearTimeout(pressTimer));
-            card.addEventListener('touchmove',    () => clearTimeout(pressTimer));
+            let deleteVisible = false;
+            
+            card.addEventListener('touchstart', () => {
+                pressTimer = setTimeout(() => {
+                    deleteX.style.display = 'flex';
+                    deleteVisible = true;
+                }, 500);
+            });
+            
+            card.addEventListener('touchend', () => clearTimeout(pressTimer));
+            card.addEventListener('touchmove', () => clearTimeout(pressTimer));
+            
+            // Tap card to hide delete if visible
+            card.addEventListener('click', () => {
+                if (deleteVisible) {
+                    deleteX.style.display = 'none';
+                    deleteVisible = false;
+                }
+            });
 
-            // Input listeners
-            setRow.querySelectorAll('.set-input').forEach(el =>
-                el.addEventListener('input', handleSetInput));
-            setRow.querySelector('.set-counter-btn').addEventListener('click', handleSetCounter);
+            // Set counter listener
+            setCounter.querySelector('.set-counter-btn').addEventListener('click', handleSetCounter);
         });
     }
 
@@ -851,76 +925,6 @@
             saveLibrary();
         }
         workouts[currentWorkout].exercises.splice(idx, 1);
-        saveWorkouts();
-        renderExercises();
-    }
-
-    // ─────────────────────────────────────────
-    // REORDER
-    // ─────────────────────────────────────────
-
-    function enterReorderMode() {
-        isReorderMode = true;
-        const container = document.getElementById('exercise-list');
-        container.classList.add('reorder-mode');
-        container.querySelectorAll('.exercise-card').forEach(c => c.classList.add('wiggle'));
-
-        container.querySelectorAll('.workout-exercise-wrapper').forEach(wrapper => {
-            const card = wrapper.querySelector('.exercise-card');
-            let startY = 0, currentY = 0, dragging = false;
-
-            card.addEventListener('touchstart', e => {
-                if (!isReorderMode) return;
-                e.preventDefault();
-                dragging = true;
-                startY = currentY = e.touches[0].clientY;
-                wrapper.style.opacity = '0.5';
-            }, { passive: false });
-
-            card.addEventListener('touchmove', e => {
-                if (!dragging) return;
-                e.preventDefault();
-                currentY = e.touches[0].clientY;
-                wrapper.style.transform = `translateY(${currentY - startY}px)`;
-
-                const hover = [...container.querySelectorAll('.workout-exercise-wrapper')]
-                    .find(w => {
-                        if (w === wrapper) return false;
-                        const r = w.getBoundingClientRect();
-                        return currentY >= r.top && currentY <= r.bottom;
-                    });
-
-                if (hover) {
-                    const wrappers = [...container.querySelectorAll('.workout-exercise-wrapper')];
-                    if (wrappers.indexOf(hover) < wrappers.indexOf(wrapper)) {
-                        container.insertBefore(wrapper, hover);
-                    } else {
-                        container.insertBefore(wrapper, hover.nextSibling);
-                    }
-                    startY = currentY;
-                    wrapper.style.transform = '';
-                }
-            }, { passive: false });
-
-            card.addEventListener('touchend', () => {
-                dragging = false;
-                wrapper.style.opacity  = '1';
-                wrapper.style.transform = '';
-            });
-        });
-
-        setTimeout(() => document.addEventListener('click', exitReorderMode, { once: true }), 100);
-    }
-
-    function exitReorderMode() {
-        isReorderMode = false;
-        const container = document.getElementById('exercise-list');
-        container.classList.remove('reorder-mode');
-        container.querySelectorAll('.exercise-card').forEach(c => c.classList.remove('wiggle'));
-
-        const newOrder = [...container.querySelectorAll('.workout-exercise-wrapper')]
-            .map(w => workouts[currentWorkout].exercises[parseInt(w.dataset.index)]);
-        workouts[currentWorkout].exercises = newOrder;
         saveWorkouts();
         renderExercises();
     }
