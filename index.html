@@ -402,6 +402,7 @@
 
 <div class="header">
     <h1>Body Tea 🍵</h1>
+    <button onclick="resetAllData()" style="position: absolute; top: 20px; right: 20px; padding: 8px 16px; background: #ff3b30; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">Reset All Data</button>
 </div>
 
 <div class="tabs">
@@ -1355,11 +1356,28 @@
     // EXPOSE TO HTML onclick HANDLERS
     // ─────────────────────────────────────────
 
+    function resetAllData() {
+        const choice = prompt('Reset options:\n1 = Reset everything (workouts, library, history, weights)\n2 = Reset workouts & library only (keep history & weights)\n3 = Cancel\n\nEnter 1, 2, or 3:');
+        
+        if (choice === '1') {
+            if (!confirm('Delete EVERYTHING? This will remove all workouts, history, library exercises, and saved weights. This cannot be undone.')) return;
+            localStorage.clear();
+            location.reload();
+        } else if (choice === '2') {
+            if (!confirm('Reset workouts & library to defaults? This will keep your workout history and saved weights, but reset all workouts and library exercises.')) return;
+            localStorage.removeItem('workouts');
+            localStorage.removeItem('library');
+            location.reload();
+        }
+        // choice === '3' or anything else = cancel, do nothing
+    }
+
     Object.assign(window, {
         finishWorkout, cancelWorkout,
         closeWorkoutSelector, createNewWorkout,
         openCreateExercise, closeCreateExercise,
-        handleTagSelectChange, saveNewExercise
+        handleTagSelectChange, saveNewExercise,
+        resetAllData
     });
 </script>
 </body>
